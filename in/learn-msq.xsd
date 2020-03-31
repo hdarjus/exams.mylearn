@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Created by Darjus Hosszejni
+                Institute for Statistics and Mathematics
+                WU Vienna -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="https://www.learn.wu.ac.at"
+xmlns="https://www.learn.wu.ac.at"
+elementFormDefault="qualified">
+
+<xs:element name="learning_resources">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="exercise">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="metadata">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="time" type="xs:integer"/>
+                  <xs:element name="category">
+                    <xs:complexType>
+                      <xs:attribute name="area" type="xs:string"/>
+                      <xs:attribute name="restype" type="xs:string"/>
+                      <xs:attribute name="shortname" type="xs:string"/>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="title" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="question_data">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="multiplechoice">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="problem_text">
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element name="p" type="ptype"/>
+                            </xs:sequence>
+                          </xs:complexType>
+                        </xs:element>
+                        <xs:element name="answer" maxOccurs="unbounded">
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element name="answer_text">
+                                <xs:complexType>
+                                  <xs:sequence>
+                                    <xs:element name="p" type="ptype"/>
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                            </xs:sequence>
+                            <xs:attribute name="value" type="xs:boolean" use="required"/>
+                          </xs:complexType>
+                        </xs:element>
+                        <xs:element name="feedback">
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element name="p" type="ptype"/>
+                            </xs:sequence>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="area" type="xs:string"/>
+          <xs:attribute name="restype" type="xs:string"/>
+          <xs:attribute name="shortname" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<xs:complexType name="ptype" mixed="true">
+  <xs:sequence>
+    <xs:element name="span" type="spantype" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="align" type="xs:string"/>
+</xs:complexType>
+
+<xs:complexType name="spantype">
+  <xs:simpleContent>
+    <xs:extension base="xs:string">
+      <xs:attribute name="class" type="xs:string"/>
+    </xs:extension>
+  </xs:simpleContent>
+</xs:complexType>
+
+</xs:schema>
