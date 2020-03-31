@@ -10,8 +10,8 @@ Dependencies: \* libxml2 (it was on my Ubuntu by default) \* pandoc \*
 recent R version
 
 The question import functionality has to be turned on by the Learn
-development team per course. Their address is "learn" at "wu" dot "ac"
-dot "at".
+development team per course. Their address is "learn" `at` "wu" `dot`
+"ac" `dot` "at".
 
 Demo
 ----
@@ -41,3 +41,12 @@ team.
 For how you could use the imported questions, please read up on
 Poolfolders and Proxy questions, Sample Exams, Strict Sequencing Study
 Modules in the MyLearn-Guide.
+
+Maintainer
+----------
+
+The script is provided as is (see LICENSE). That said, if you have a
+minimal example of a .Rmd question that does not compile or Learn gives
+an error at the stage of import, you can contact me under "darjus" `dot`
+"hosszejni" `at` "wu" `dot` "ac" `dot` "at". Please attach the .Rmd file
+in question.
