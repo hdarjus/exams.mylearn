@@ -32,6 +32,10 @@ The output zip file is `output`. One can upload that zip file to Learn
 directly (after the Learn development team has activated that feature
 for the given course).
 
+I have tested the framework only with the shown example so there might
+be bugs. I managed to upload 100 questions to Learn at the same time and
+then import them in a Poolfolder, so it seems to work.
+
 Further Reading
 ---------------
 
