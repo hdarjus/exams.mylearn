@@ -6,8 +6,10 @@ multiple-select questions with a simple feedback option in Learn's
 import format. The imported questions can be organized into exams in the
 Learning Activities.
 
-Dependencies: \* libxml2 (it was on my Ubuntu by default) \* pandoc \*
-recent R version
+Dependencies:
+* libxml2 (it was on my Ubuntu by default)
+* pandoc
+* recent R version
 
 The question import functionality has to be turned on by the Learn
 development team per course. Their address is "learn" `at` "wu" `dot`
