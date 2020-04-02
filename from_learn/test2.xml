@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<learning_resources>
+ <exercise area="qm2" restype="excs" shortname="shortnameofyourexercise">
+  <metadata>
+   <time>1</time>
+   <category area="Qm2" restype="csp" shortname="11"/>
+   <title>Titel der Frage</title>
+  </metadata>
+  <question_data>
+   <multiplechoice>
+    <problem_text>
+     <p>A new question with formula <span class="math-tex">\(x = {-b \pm \sqrt{b^2-4ac} \over 2a}\)</span></p>
+    </problem_text>
+    <answer value="false">
+     <answer_text>
+      <p align="left">First answer alternative</p>
+     </answer_text>
+    </answer>
+    <answer value="false">
+     <answer_text>
+      <p align="left">Second alternative</p>
+     </answer_text>
+    </answer>
+    <answer value="true">
+     <answer_text>
+      <p align="left">Third alternative</p>
+     </answer_text>
+    </answer>
+    <answer value="false">
+     <answer_text>
+      <p align="left">Fourth alternative</p>
+     </answer_text>
+    </answer>
+    <answer value="false">
+     <answer_text>
+      <p align="left">Fifth alternative</p>
+     </answer_text>
+    </answer>
+   </multiplechoice>
+  </question_data>
+ </exercise>
+</learning_resources>
