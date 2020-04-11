@@ -13,7 +13,7 @@ exams2mylearn <- function (filename, name, n, curdir = getwd()) {
   outdir <- file.path(curdir, "out")  # output directory
   
   schema.path <- file.path(indir, "learn-msq.xsd")
-  template.path <- file.path(indir, glue("template.xml"))
+  template.path <- file.path(indir, "template.xml")
   if (!file.exists(indir)) {
     stop("Could not find directory 'in'. Looking for it under ", indir, ".")
   }
@@ -34,10 +34,8 @@ exams2mylearn <- function (filename, name, n, curdir = getwd()) {
   
   message("Step 1: Generating exams in HTML format...")
   # Generate exams both in R list and in .html
-  xexm <- exams2pandoc(filename, name = glue("{name}_v"), n = n,
-                       dir = tmpdir, type = "html",
-                       options = c("--standalone", "--mathjax"),
-                       template = "plain.tex")
+  xexm <- exams2html(filename, name = glue("{name}_v"), n = n,
+                     dir = tmpdir, converter = "pandoc-mathjax")
   message("Step 1: Done")
   # Read the XML Schema for validation (it's unneeded atually)
   schema <- read_xml(schema.path)
@@ -49,15 +47,6 @@ exams2mylearn <- function (filename, name, n, curdir = getwd()) {
     exercise_exams <- xexm[[glue("exam{str_pad(num, str_length(n), side = 'left', pad = '0')}")]]$exercise1
     # Read current exercise HTML as XML
     htmlobj <- read_html(file.path(tmpdir, glue("{name}_v{num}.html")))
-    # Some necessary fixes
-    lapply(xml_find_all(htmlobj, ".//span"), function (x) xml_attr(x, "class") <- "math-tex")
-    xml_remove(xml_find_all(htmlobj, "./body/ol/li/p/strong"))
-    xml_remove(xml_find_all(htmlobj, "./body/ol/li/p/br"))
-    xml_remove(xml_find_all(htmlobj, "./body/ol/li/p[not(boolean(text()))]"))
-    begin_q_text_node <- xml_find_first(htmlobj, "./body/ol/li/p[1]/text()")
-    xml_text(begin_q_text_node) <- str_replace(xml_text(begin_q_text_node), "\n", "")
-    begin_sol_text_node <- xml_find_first(htmlobj, "./body/ol/li/p[2]/text()")
-    xml_text(begin_sol_text_node) <- str_replace(xml_text(begin_sol_text_node), "\n", "")
     
     # Read the XML template
     output <- read_xml(template.path)
