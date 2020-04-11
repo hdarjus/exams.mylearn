@@ -1,0 +1,168 @@
+```{r, echo=FALSE, results="hide"}
+## parameters
+# a <- sample(2:9, 1)
+# b <- sample(seq(2, 4, 0.1), 1)
+# c <- sample(seq(0.5, 0.8, 0.01), 1)
+# ## solution
+# res <- exp(b * c) * (a * c^(a-1) +
+#        b * c^a)
+
+## DATA GENERATION
+## base units/patterns
+unit <- sample(c(1, 2, 5, 10, 20), 1)
+pattern <- if(unit%%2 > 0) 1:4 else seq(from = 0.5, to = 4, by = 0.5)
+
+## widths of box segments (with skewness >= 0)
+widths <- sort(sample(pattern[pattern < 3], 2, replace = TRUE))
+## add whisker lengths (reflecting pattern of box segments)
+if(widths[1] < widths[2]) {
+  widths <- c(widths, sample(pattern[pattern >= widths[2]], 1))
+  widths <- c(sample(pattern[pattern >= widths[1] & pattern < widths[3]], 1), widths)
+} else {
+  widths <- c(widths, sample(pattern[pattern >= widths[1] & pattern <= 2 * widths[1]], 2,
+    replace = TRUE))[c(3, 1, 2, 4)]
+}
+## randomly decide between left- and right-skewed
+if(runif(1) > 0.5) widths <- rev(widths)
+
+## compute quantiles (with random minimum)
+quantiles <- cumsum(c(sample(1:40, 1), widths)) * unit
+
+## and some statistics
+iqr <- diff(quantiles[c(2, 4)])
+skewness <-  diff(diff(quantiles[2:4]))/iqr
+
+
+## QUESTION/ANSWER GENERATION
+questions <- character(5)
+solutions <- logical(5)
+explanations <- character(5)
+
+## 1. skewness (verbally)
+if(runif(1) > 0.5) {
+  questions[1] <- "Die Verteilung ist rechtsschief."
+  solutions[1] <- skewness > 0
+  explanations[1] <- if(solutions[1]) "$SK > 0$, also ist die Verteilung rechtsschief."
+    else "$SK \\leq 0$, also ist die Verteilung _nicht_ rechtsschief."
+} else {
+  questions[1] <- "Die Verteilung ist linksschief."
+  solutions[1] <- skewness < 0
+  explanations[1] <- if(solutions[1]) "$SK < 0$, also ist die Verteilung linksschief."
+    else "$SK \\geq 0$, also ist die Verteilung _nicht_ linksschief."
+}
+
+## 2. skewness (via mean and median)
+if(runif(1) > 0.5) {
+  questions[2] <- "Der Mittelwert ist größer als der Median."
+  solutions[2] <- skewness > 0
+  explanations[2] <- if(solutions[2]) "$SK > 0$, also ist die Verteilung rechtsschief und der Mittelwert größer als der Median."
+    else "$SK \\leq 0$, also ist die Verteilung _nicht_ rechtsschief und der Mittelwert _nicht_ größer als der Median."
+} else {
+  questions[2] <- "Der Median ist größer als der Mittelwert."
+  solutions[2] <- skewness < 0
+  explanations[2] <- if(solutions[2]) "$SK < 0$, also ist die Verteilung linksschief und der Mittelwert kleiner als der Median."
+    else "$SK \\geq 0$, also ist die Verteilung _nicht_ linksschief und der Mittelwert _nicht_ kleiner als der Median."
+}
+
+## 3. skewness (numerically)
+skewness2 <- sample(c(-1, 1), 1) * round(runif(1, min = 0, max = 0.5), digits = 1)
+if(runif(1) > 0.5) {
+  questions[3] <- paste("Der Schiefekoeffizient ist größer als ", skewness2, ".", sep = "")
+  solutions[3] <- skewness > skewness2
+  explanations[3] <- paste("$SK = ", round(skewness, digits = 3), "$ ist ",
+    ifelse(solutions[3], "", "_nicht_ "), "größer als $", skewness2, "$.", sep = "")
+} else {
+  questions[3] <- paste("Der Schiefekoeffizient ist kleiner als ", skewness2, ".", sep = "")
+  solutions[3] <- skewness < skewness2
+  explanations[3] <- paste("$SK = ", round(skewness, digits = 3), "$ und damit ist SK ",
+    ifelse(solutions[3], "", "_nicht_ "), "kleiner als $", skewness2, "$.", sep = "")
+}
+
+## 4. QD comparison
+iqr2 <- round(round(runif(1, min = 2, max = 4), digits = 1) * unit)
+if(runif(1) > 0.5) {
+  questions[4] <- paste("Die Interquartilsdistanz beträgt mindestens ", iqr2, ".", sep = "")
+  solutions[4] <- iqr >= iqr2
+  explanations[4] <- paste("$QD = ", iqr,
+    ifelse(solutions[4], " \\geq ", " < "), iqr2, "$.", sep = "")
+} else {
+  questions[4] <- paste("Die Interquartilsdistanz beträgt höchstens ", iqr2, ".", sep = "")
+  solutions[4] <- iqr <= iqr2
+  explanations[4] <- paste("$QD = ", iqr,
+    ifelse(solutions[4], " \\leq ", " > "), iqr2, "$.", sep = "")
+}
+
+## 5. quartile comparions
+ix <- sample(1:3, 1)
+if(runif(1) > 0.5) {
+  quantile2 <- quantiles[c(1, 2, 4)[ix]]
+  questions[5] <- paste("Mindestens 25 Prozent der Beobachtungen sind kleiner oder gleich ",
+    quantile2, ".", sep = "")
+  solutions[5] <- quantile2 >= quantiles[2]
+  explanations[5] <- paste(quantile2, " ist das ",
+    c("Minimum", "untere Quartil", "obere Quartil")[ix], ".", sep = "")
+} else {
+  quantile2 <- quantiles[c(2, 4, 5)[ix]]
+  questions[5] <- paste("Mindestens 25 Prozent der Beobachtungen sind größer oder gleich ",
+    quantile2, ".", sep = "")
+  solutions[5] <- quantile2 <= quantiles[4]
+  explanations[5] <- paste(quantile2, " ist das ",
+    c("untere Quartil", "obere Quartil", "Maximum")[ix], ".", sep = "")
+}
+
+tmp <- tempdir()
+
+```
+
+Question
+========
+In der Abbildung ist eine Verteilung durch einen Boxplot dargestellt.
+Welche der folgenden Aussagen sind richtig? 
+
+```{r boxplot,  fig.height = 2.5, fig.width = 6, echo=FALSE, eps=FALSE, results="hide", fig.path = "", fig.cap = ""}
+exam_boxplot <- function(quantiles, unit = NULL)
+{
+  ## x-axis ticks
+  if(is.null(unit)) unit <- min(diff(quantiles))
+  ax <- c(quantiles[1] - unit, quantiles, quantiles[5] + unit)
+
+  ## graphical parameters
+  opar <- par()[c("las", "cex", "mai", "mar")]
+  on.exit(par(opar))
+  par(las = 2, cex = 1.2, mai = c(1, 1, 0.5, 0.5), mar = c(3, 1, 0, 1))
+
+  ## draw box and whiskers  
+  plot(quantiles[c(2, 4, 4, 2, 2)], 0.25 * c(-1, -1, 1, 1, -1),
+    type = "l", xlim = range(ax), ylim = c(-0.5, 0.5), ylab = "", xlab = "", axes = FALSE)
+  lines(quantiles[1:2], c(0, 0))
+  lines(quantiles[4:5], c(0, 0))
+  lines(quantiles[c(1, 1)], c(-0.125, 0.125))
+  lines(quantiles[c(5, 5)], c(-0.125, 0.125))
+  lines(quantiles[c(3, 3)],c(-0.25, 0.25))
+  axis(1, ax, as.character(ax))
+
+  invisible(quantiles)
+}
+
+exam_boxplot(quantiles, unit)
+```
+Answerlist
+----------
+* `r questions[1]`
+* `r questions[2]`
+* `r questions[3]`
+* `r questions[4]`
+* `r questions[5]`
+
+Solution
+========
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(ifelse(solutions, "True", "False"), explanations, markup = "markdown")
+```
+
+Meta-information
+================
+exname: First Question
+extype: mchoice
+exsolution: `r mchoice2string(solutions)`
+exshuffle: TRUE
