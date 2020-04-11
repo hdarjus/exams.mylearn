@@ -1,0 +1,27 @@
+Question
+========
+Here comes some R output:
+```{r, results='markup'}
+t.test(1:10)
+```
+
+
+Answerlist
+----------
+* `r 1+1`
+* `r 0+1`
+* `r 4+1`
+* Four
+* `r 1+2`
+
+Solution
+========
+
+There is some feedback here.
+
+Meta-information
+================
+exname: R Output
+extype: mchoice
+exsolution: 10000
+exshuffle: TRUE

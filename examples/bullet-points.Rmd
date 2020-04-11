@@ -1,0 +1,37 @@
+Question
+========
+Examine these nice bullet points:
+
+* Wow!
+* That's what I'm talking about!
+* Ok boring
+
+Then let's look at enumerations:
+
+1. Oh wow!
+1. Yeah!
+1. Wooooooooooo!
+
+Answerlist
+----------
+* `r 1+1`
+* `r 0+1`
+* `r 4+1`
+* `r 1+3`
+* `r 1+2`
+
+Solution
+========
+
+Some feedback here with these amazing bullet points:
+
+* One
+* Two
+* Three
+
+Meta-information
+================
+exname: Bullet Points
+extype: mchoice
+exsolution: 10000
+exshuffle: TRUE

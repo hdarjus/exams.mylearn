@@ -1,0 +1,29 @@
+```{r setup, include=FALSE}
+dat <- scale(1:30)
+```
+
+Question
+========
+Here's a boxplot
+```{r, fig.cap="A beautiful boxplot"}
+boxplot(dat, main = "Beauty")
+```
+
+Answerlist
+----------
+* Hey
+* Yo
+* Foo
+* Bar
+
+Solution
+========
+
+There is some feedback here.
+
+Meta-information
+================
+exname: First Question
+extype: mchoice
+exsolution: 0000
+exshuffle: TRUE

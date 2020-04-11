@@ -1,0 +1,30 @@
+Question
+========
+Some R code:
+
+```{r, echo=TRUE, eval=FALSE}
+dat <- 1:20
+s <- 0
+for (i in seq_along(dat)) {
+  s <- s + dat[i]
+}
+```
+
+
+Answerlist
+----------
+* One
+* Two
+* Three
+
+Solution
+========
+
+There is some feedback here.
+
+Meta-information
+================
+exname: R Code
+extype: mchoice
+exsolution: 100
+exshuffle: TRUE
