@@ -21,7 +21,7 @@ asy.binom.test <- function(x, n, p = 0.5,
   } else {
     stopifnot(length(n) == 1, length(x) == 1, is.numeric(n), is.numeric(x))
     phat <- x/n
-    dnam <- paste0(x, "and", n)
+    dnam <- paste(x, "and", n)
     snam <- "success"
   }
   
@@ -48,8 +48,8 @@ asy.binom.test <- function(x, n, p = 0.5,
     statistic = structure(zstat, .Names = "Z"),
     p.value = pval,
     conf.int = ci,
-    estimate = structure(phat, .Names = paste0("probability of", snam)),
-    null.value = structure(p, .Names = paste0("probability of", snam)),
+    estimate = structure(phat, .Names = paste("probability of", snam)),
+    null.value = structure(p, .Names = paste("probability of", snam)),
     alternative = alternative,
     method = "Asymptotic binomial test",
     data.name = dnam    

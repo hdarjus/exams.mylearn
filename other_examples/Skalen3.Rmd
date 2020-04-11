@@ -415,9 +415,11 @@ Question
 #library(xtable)
 tab <- skalen_df_selection[1:n, pooling]
 rownames(tab) <- 1:n
-print(xtable:::xtable(tab, align = "|r|c|c|c|c|c|"), type = "latex",  sanitize.text.function = function(x){x})
+print(knitr::kable(tab, align = "rccccc"))
 ```
 Die Tabelle oben zeigt die ersten $`r n`$ Untersuchungseinheiten einer Datenmatrix mit 5 verschiedenen Merkmalen. Welche der folgenden Aussagen sind richtig?
+$$aaaa$$
+
 Answerlist
 ----------
 * `r qpool[1]`
