@@ -11,6 +11,7 @@ The function `exams2mylearn` in `exams2mylearn.R` can generate multiple-select q
 The imported questions can be organized into exams in the Learning Activities.
 
 Dependencies:
+
 * libxml2 (it was on my Ubuntu by default)
 * pandoc
 * recent R version

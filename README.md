@@ -2,18 +2,19 @@ Question Generation for MyLearn
 ===============================
 
 The function `exams2mylearn` in `exams2mylearn.R` can generate
-multiple-select questions with a simple feedback option in Learn's
+multiple-select questions with a simple feedback option in Learn’s
 import format. The imported questions can be organized into exams in the
 Learning Activities.
 
 Dependencies:
-* libxml2 (it was on my Ubuntu by default)
-* pandoc
-* recent R version
+
+-   libxml2 (it was on my Ubuntu by default)
+-   pandoc
+-   recent R version
 
 The question import functionality has to be turned on by the Learn
-development team per course. Their address is "learn" `at` "wu" `dot`
-"ac" `dot` "at".
+development team per course. Their address is “learn” `at` “wu” `dot`
+“ac” `dot` “at”.
 
 Demo
 ----
@@ -53,6 +54,6 @@ Maintainer
 
 The script is provided as is (see LICENSE). That said, if you have a
 minimal example of a .Rmd question that does not compile or Learn gives
-an error at the stage of import, you can contact me under "darjus" `dot`
-"hosszejni" `at` "wu" `dot` "ac" `dot` "at". Please attach the .Rmd file
+an error at the stage of import, you can contact me under “darjus” `dot`
+“hosszejni” `at` “wu” `dot` “ac” `dot` “at”. Please attach the .Rmd file
 in question.
