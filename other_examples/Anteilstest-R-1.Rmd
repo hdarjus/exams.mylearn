@@ -1,7 +1,6 @@
+[//]: # "Created by Jana Hlavinova, Institute for Statistics and Mathematics, WU Vienna"
+
 ```{r, echo=FALSE, results="hide"}
-
-
-
 asy.binom.test <- function(x, n, p = 0.5,
   alternative = c("two.sided", "less", "greater"), conf.level = 0.95,
   sd.method = c("bootstrap", "robust"))
