@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<learning_resources>
- <file area="qm2" restype="file" shortname="file1">
-  <metadata>
-   <title>Titel</title>
-  </metadata>
-  <resource name="default.pdf"/>
- </file>
-</learning_resources>

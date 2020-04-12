@@ -5,16 +5,16 @@ boxdat <- scale(1:30)
 
 Question
 ========
-What is the derivative of $f(x) = x^{`r a`} e^{`r b` x}$, evaluated at $x = `r c`$?
-A formula is $$x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}$$.
+What is the derivative of $f(x) = x^{`r 1`} e^{`r 2` x}$, evaluated at $x = `r 4`$?
+A formula is $$x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}.$$
 
 Here comes a table
-```{r, results='markup'}
+```{r, results='markup', eval=TRUE, echo=FALSE}
 knitr::kable(tab)
 ```
 
 Here comes some R output:
-```{r, results='markup'}
+```{r, results='markup', eval=TRUE, echo=FALSE}
 t.test(1:10)
 ```
 
@@ -28,26 +28,22 @@ for (i in seq_along(dat)) {
 ```
 
 Here's a boxplot
-```{r, fig.cap="A beautiful boxplot"}
+```{r, fig.width=7, fig.asp=1, out.width='600px', eval=TRUE, echo=FALSE}
 boxplot(boxdat, main = "Beauty")
 ```
 
 Answerlist
 ----------
-* `r fmt(res)`
-* `r fmt(a)`
-* `r fmt(b)`
-* `r fmt(c)`
-* `r fmt(a+c)`
+* `r fmt(1+1e-4)`
+* `Hey`
+* Yo
+* Foo
+* Bar
 
 Solution
 ========
 
-Here comes a table
-
-|         |         |         |                |         |
-|--------:|:--------|--------:|:---------------|--------:|
-| $x_1 =$ | `r 4*2` | $x_2 =$ | Something here | $x_3 =$ |
+Some feedback.
 
 Meta-information
 ================

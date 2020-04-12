@@ -1,100 +1,103 @@
-needed.libraries <- c("exams", "xml2", "glue", "stringr", "svMisc")
-for (libr in needed.libraries) {
-  if (!require(libr, character.only = TRUE, quietly = TRUE)) {
-    message("Installing package '", libr, "'")
-    install.packages(libr, quiet = TRUE)
-    library(libr, character.only = TRUE)
-  }
-}
-
-exams2mylearn <- function (filename, name, n, curdir = getwd()) {
-  tmpdir <- tempdir()
-  indir <- file.path(curdir, "in")  # input directory, no need to touch it :)
-  outdir <- file.path(curdir, "out")  # output directory
+#' Exam Generation for the MyLearn Platform
+#' 
+#' The Vienna University of Economics and Business has a special
+#' XML format on its teaching platform MyLearn. \code{exams2mylearn} transforms
+#' input files in the R/exams to XML files and zips them. The resulting
+#' zip file can be directly uploaded to the MyLearn platform after having
+#' contected the MyLearn development team.
+#' 
+#' @param filename (character) absolute or relative path to the exercise template.
+#' Usually simply a filename pointing at a .Rmd file in the working directory
+#' @param name (character) unique name of output files
+#' @param n (integer) number of random variants to create
+#' @param dir (character, optional) output directory, defaults to the currect working directory
+#' @return As a side effect, the function produces a zip file in the working
+#' directory. The exact path to the zip file is returned invisibly.
+#' @note The development team has to turn on the upload functionality on
+#' a per course basis.
+#' @export
+exams2mylearn <- function (filename, name, n, dir = ".") {
+  tmpdir <- base::tempdir()
+  outdir <- base::normalizePath(dir, mustWork = FALSE)
+  outfile <- base::file.path(outdir, glue::glue("{name}.zip"))
   
-  schema.path <- file.path(indir, "learn-msq.xsd")
-  template.path <- file.path(indir, "template.xml")
-  if (!file.exists(indir)) {
-    stop("Could not find directory 'in'. Looking for it under ", indir, ".")
+  if (base::file.exists(outfile)) {
+    warning(outfile, " exists. Consider first deleting it or spedifying another 'name' parameter.")
   }
-  if (!file.exists(schema.path) || !file.exists(template.path)) {
-    stop("Could not find the schema and the template in directory 'in'. Looking for them under ", schema.path, " and ", template.path, ".")
+  
+  template.path <- base::system.file("extdata", "template-multiple.xml", package = "exams.wuvienna")
+  if (!base::file.exists(template.path)) {
+    base::stop("Could not find template-multiple.xml. Looking for it under ", template.path, ".")
   } else {
-    message("All necessary XML input files found")
-  }
-  if (!dir.exists(outdir)) {
-    dir.create(outdir)
-    message("Created", outdir, "\n")
-  } else if (length(list.files(outdir)) != 0) {
-    stop("Please empty or delete ", outdir, " and restart :)")
-  } else {
-    message("Output directory", outdir, "found")
-  }
-  message("Temporary directory is", tmpdir)
-  
-  message("Step 1: Generating exams in HTML format...")
-  # Generate exams both in R list and in .html
-  xexm <- exams2html(filename, name = glue("{name}_v"), n = n,
-                     dir = tmpdir, converter = "pandoc-mathjax")
-  message("Step 1: Done")
-  # Read the XML Schema for validation (it's unneeded atually)
-  schema <- read_xml(schema.path)
-  
-  message("Step 2: Converting from HTML to XML")
-  for (num in seq_len(n)) {
-    progress(num, max.value = n)
-    # Extract current exercise in R list format
-    exercise_exams <- xexm[[glue("exam{str_pad(num, str_length(n), side = 'left', pad = '0')}")]]$exercise1
-    # Read current exercise HTML as XML
-    htmlobj <- read_html(file.path(tmpdir, glue("{name}_v{num}.html")))
-    
+    base::message("Necessary XML input file found")
     # Read the XML template
-    output <- read_xml(template.path)
-    # Validate the output in the beginning (this tests the xml2 package as well)
-    if (!isTRUE(xml_validate(output, schema)))
-      stop("Validation error!")
-    # Remove namespaces, Learn doesn't like them
-    xml_attrs(output) <- NULL
-    # Extract an answer template node then delete them
-    ans_node_temp <- xml_find_first(output, "./exercise/question_data/multiplechoice/answer")
-    xml_remove(xml_find_all(output, "./exercise/question_data/multiplechoice/answer"))
+    template <- xml2::read_xml(template.path)
+  }
+  if (!base::dir.exists(outdir)) {
+    base::dir.create(outdir)
+    base::message("Created ", outdir)
+  } else {
+    base::message("Output directory ", outdir, " found")
+  }
+  base::message("Temporary directory is ", tmpdir)
+  
+  base::message("Step 1: Generating exams in HTML format...")
+  # Generate exams both in R list and in .html
+  xexm <- exams::exams2html(filename, name = glue::glue("{name}_v"), n = n,
+                            dir = tmpdir, converter = "pandoc-mathjax")
+  base::message("Step 1: Done")
+  
+  base::message("Step 2: Converting from HTML to XML\r\n", appendLF=FALSE)
+  utils::flush.console()
+  to_zip <- character(0)
+  for (num in base::seq_len(n)) {
+    svMisc::progress(num, max.value = n)
+    # Extract current exercise in R list format
+    exercise_exams <- xexm[[glue::glue("exam{stringr::str_pad(num, stringr::str_length(n), side = 'left', pad = '0')}")]]$exercise1
+    # Read current exercise HTML as XML
+    htmlobj <- xml2::read_html(file.path(tmpdir, glue::glue("{name}_v{num}.html")))
     
-    # Replace nodes
+    # Copy template
+    output <- xml2::xml_new_root(xml2::xml_root(template))
+    
+    # Add HTML nodes
     ## Replace title
     title_text <- exercise_exams$metainfo$name
-    title_node_temp <- xml_find_first(output, "./exercise/metadata/title")
-    xml_text(title_node_temp) <- title_text
+    title_node_temp <- xml2::xml_find_first(output, "./exercise/metadata/title")
+    xml2::xml_text(title_node_temp) <- title_text
     ## Replace question
-    q_node_html <- xml_find_first(htmlobj, "./body/ol/li/p")
-    q_node_temp <- xml_find_first(output, "./exercise/question_data/multiplechoice/problem_text/p")
-    xml_replace(q_node_temp, q_node_html)
+    q_node_html <- xml2::xml_find_first(xml2::read_html(stringr::str_c("<span>", stringr::str_c(exercise_exams$question, collapse = "\n"), "</span>")), "./body/span")
+    q_node <- xml2::xml_find_first(output, "./exercise/question_data/multiplechoice/problem_text")
+    xml2::xml_add_child(q_node, q_node_html)
     ## Replace short name
-    ex_node_temp <- xml_find_first(output, "./exercise")
-    xml_attr(ex_node_temp, "shortname") <- glue("{str_to_lower(str_replace_all(title_text, '[[:space:]]', ''))}{num}")
+    exercise_node <- xml2::xml_find_first(output, "./exercise")
+    xml2::xml_attr(exercise_node, "shortname") <- glue::glue("{stringr::str_to_lower(stringr::str_replace_all(title_text, '[[:space:]]', ''))}{num}")
     ## Process answers options
-    ans_nodes_html <- xml_find_all(htmlobj, "./body/ol/li/ol[1]/li/p")
-    mult_node_temp <- xml_find_first(output, "./exercise/question_data/multiplechoice")
-    for (i in seq_along(ans_nodes_html)) {
-      xml_add_child(mult_node_temp, ans_node_temp,
-                    .where = length(xml_children(mult_node_temp))-1)
-      ans_node_temp_tomodify <- xml_find_first(output, glue("./exercise/question_data/multiplechoice/answer[{i}]"))
-      xml_attr(ans_node_temp_tomodify, "value") <- str_to_lower(exercise_exams$metainfo$solution[i])
-      p_node_temp_tomodify <- xml_find_first(output, glue("./exercise/question_data/multiplechoice/answer[{i}]/answer_text/p"))
-      xml_replace(p_node_temp_tomodify, ans_nodes_html[[i]])
-      p_node_temp_modified <- xml_find_first(output, glue("./exercise/question_data/multiplechoice/answer[{i}]/answer_text/p"))
-      xml_attr(p_node_temp_modified, "align") <- "left"
+    mult_node <- xml2::xml_find_first(output, "./exercise/question_data/multiplechoice")
+    for (i in base::seq_along(exercise_exams$questionlist)) {
+      # Create answer template node
+      ans_node_temp <- xml2::read_xml(stringr::str_c('<answer value="', stringr::str_to_lower(exercise_exams$metainfo$solution[i]), '"> <answer_text/> </answer>'))
+      # Construct answer html nodes
+      ans_str <- exercise_exams$questionlist[i]
+      ans_node_html <- xml2::xml_find_first(xml2::read_html(stringr::str_c("<p align=\"left\">", ans_str, "</p>")), "./body/p")
+      xml2::xml_add_child(mult_node, ans_node_temp,
+                    .where = base::length(xml2::xml_children(mult_node))-1)
+      ans_node <- xml2::xml_find_first(output, glue::glue("./exercise/question_data/multiplechoice/answer[{i}]/answer_text"))
+      xml2::xml_add_child(ans_node, ans_node_html)
     }
-    p_node_temp <- xml_find_first(output, "./exercise/question_data/multiplechoice/feedback/p")
-    xml_replace(p_node_temp, xml_find_first(htmlobj, "./body/ol/li/p[2]"))
+    feedback_node <- xml2::xml_find_first(output, "./exercise/question_data/multiplechoice/feedback")
+    feedback_node_html <- xml2::xml_find_first(xml2::read_html(stringr::str_c("<span>", stringr::str_c(exercise_exams$solution, collapse = "\n"), "</span>")), "./body/span")
+    xml2::xml_add_child(feedback_node, feedback_node_html)
     
-    write_xml(output, file.path(tmpdir, glue("{name}_v{num}.xml")))
+    fileout <- base::file.path(tmpdir, glue::glue("{name}_v{num}.xml"))
+    xml2::write_xml(output, fileout)
+    to_zip <- c(to_zip, fileout)
   }
-  message("Step 2: Done")
+  base::message("\nStep 2: Done")
   
-  message("Step 3: Writing ZIP file")
-  outfile <- file.path(outdir, glue("{name}.zip"))
-  zip(outfile, file.path(tmpdir, glue("{name}_v{nn}.xml", nn = seq_len(n))))
-  message("Step 3: Done. Output is", outfile)
-  invisible(outfile)
+  base::message("Step 3: Writing ZIP file")
+  utils::zip(outfile, to_zip, flags = "-Dj9X")
+  base::message("Step 3: Done. Output is ", outfile)
+  base::invisible(outfile)
 }
 

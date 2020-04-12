@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Created by Darjus Hosszejni
+                Institute for Statistics and Mathematics
+                WU Vienna -->
+<learning_resources>
+ <exercise area="QM2" restype="excs" shortname="exshortname">
+  <metadata>
+   <time>1</time>
+   <category area="QM2" restype="csp" shortname="catshortname"/>
+   <title>Title</title>
+  </metadata>
+  <question_data>
+   <multiplechoice>
+    <problem_text/>
+    <feedback/>
+   </multiplechoice>
+  </question_data>
+ </exercise>
+</learning_resources>
