@@ -13,5 +13,5 @@
 #' @importFrom xml2 read_xml read_html xml_validate xml_attrs xml_find_first xml_find_all xml_text xml_replace xml_attr xml_add_child xml_children write_xml
 #' @importFrom glue glue
 #' @importFrom stringr str_to_lower str_pad str_length str_replace_all
-#' @importFrom svMisc progress
 #' @importFrom utils zip
+NULL

@@ -15,6 +15,13 @@
 #' directory. The exact path to the zip file is returned invisibly.
 #' @note The development team has to turn on the upload functionality on
 #' a per course basis.
+#' @examples
+#' ex_files <- example_paths()
+#' exams2mylearn(ex_files["mixture"], "various_options", 2)
+#' \dontrun{
+#' exams2mylearn(ex_files["plot"], "boxplot_exercise", 40)
+#' exams2mylearn(ex_files["single_choice"], "single_choice_exercise", 40)
+#' }
 #' @export
 exams2mylearn <- function (filename, name, n, dir = ".") {
   tmpdir <- base::tempdir()
@@ -22,16 +29,22 @@ exams2mylearn <- function (filename, name, n, dir = ".") {
   outfile <- base::file.path(outdir, glue::glue("{name}.zip"))
   
   if (base::file.exists(outfile)) {
-    warning(outfile, " exists. Consider first deleting it or spedifying another 'name' parameter.")
+    warning(outfile, " exists. Consider deleting it or specifying another 'name' parameter and rerunning.")
   }
   
-  template.path <- base::system.file("extdata", "template-multiple.xml", package = "exams.wuvienna")
-  if (!base::file.exists(template.path)) {
-    base::stop("Could not find template-multiple.xml. Looking for it under ", template.path, ".")
+  template.path <- c(
+    "multiplechoice" = system.file("extdata", "template-multiple.xml", package = "exams.wuvienna"),
+    "singleanswer" = system.file("extdata", "template-single.xml", package = "exams.wuvienna")
+    )
+  if (!base::file.exists(template.path["singleanswer"]) ||
+      !base::file.exists(template.path["multiplechoice"])) {
+    base::stop("Could not find the template XML files. Searched for ",
+               template.path["singleanswer"],
+               " and ",
+               template.path["multiplechoice"],
+               ".")
   } else {
-    base::message("Necessary XML input file found")
-    # Read the XML template
-    template <- xml2::read_xml(template.path)
+    base::message("Necessary XML input files found")
   }
   if (!base::dir.exists(outdir)) {
     base::dir.create(outdir)
@@ -48,14 +61,20 @@ exams2mylearn <- function (filename, name, n, dir = ".") {
   base::message("Step 1: Done")
   
   base::message("Step 2: Converting from HTML to XML\r\n", appendLF=FALSE)
-  utils::flush.console()
+  
+  # Single or multiple choice?
+  single_choice <- xexm[[1]][[1]]$metainfo$type == "schoice"
+  multiple_choice <- xexm[[1]][[1]]$metainfo$type == "mchoice"
+  if (!xor(single_choice, multiple_choice)) {
+    base::stop("Unknown exercise type. Only single choice (schoice) and multiple choice (mchoice) are allowed!")
+  }
+  type <- if (single_choice) "singleanswer" else "multiplechoice"
+  # Read the XML template
+  template <- xml2::read_xml(template.path[type])
   to_zip <- character(0)
   for (num in base::seq_len(n)) {
-    svMisc::progress(num, max.value = n)
     # Extract current exercise in R list format
     exercise_exams <- xexm[[glue::glue("exam{stringr::str_pad(num, stringr::str_length(n), side = 'left', pad = '0')}")]]$exercise1
-    # Read current exercise HTML as XML
-    htmlobj <- xml2::read_html(file.path(tmpdir, glue::glue("{name}_v{num}.html")))
     
     # Copy template
     output <- xml2::xml_new_root(xml2::xml_root(template))
@@ -67,13 +86,13 @@ exams2mylearn <- function (filename, name, n, dir = ".") {
     xml2::xml_text(title_node_temp) <- title_text
     ## Replace question
     q_node_html <- xml2::xml_find_first(xml2::read_html(stringr::str_c("<span>", stringr::str_c(exercise_exams$question, collapse = "\n"), "</span>")), "./body/span")
-    q_node <- xml2::xml_find_first(output, "./exercise/question_data/multiplechoice/problem_text")
+    q_node <- xml2::xml_find_first(output, glue::glue("./exercise/question_data/{type}/problem_text"))
     xml2::xml_add_child(q_node, q_node_html)
     ## Replace short name
     exercise_node <- xml2::xml_find_first(output, "./exercise")
     xml2::xml_attr(exercise_node, "shortname") <- glue::glue("{stringr::str_to_lower(stringr::str_replace_all(title_text, '[[:space:]]', ''))}{num}")
     ## Process answers options
-    mult_node <- xml2::xml_find_first(output, "./exercise/question_data/multiplechoice")
+    mult_node <- xml2::xml_find_first(output, glue::glue("./exercise/question_data/{type}"))
     for (i in base::seq_along(exercise_exams$questionlist)) {
       # Create answer template node
       ans_node_temp <- xml2::read_xml(stringr::str_c('<answer value="', stringr::str_to_lower(exercise_exams$metainfo$solution[i]), '"> <answer_text/> </answer>'))
@@ -82,10 +101,10 @@ exams2mylearn <- function (filename, name, n, dir = ".") {
       ans_node_html <- xml2::xml_find_first(xml2::read_html(stringr::str_c("<p align=\"left\">", ans_str, "</p>")), "./body/p")
       xml2::xml_add_child(mult_node, ans_node_temp,
                     .where = base::length(xml2::xml_children(mult_node))-1)
-      ans_node <- xml2::xml_find_first(output, glue::glue("./exercise/question_data/multiplechoice/answer[{i}]/answer_text"))
+      ans_node <- xml2::xml_find_first(output, glue::glue("./exercise/question_data/{type}/answer[{i}]/answer_text"))
       xml2::xml_add_child(ans_node, ans_node_html)
     }
-    feedback_node <- xml2::xml_find_first(output, "./exercise/question_data/multiplechoice/feedback")
+    feedback_node <- xml2::xml_find_first(output, glue::glue("./exercise/question_data/{type}/feedback"))
     feedback_node_html <- xml2::xml_find_first(xml2::read_html(stringr::str_c("<span>", stringr::str_c(exercise_exams$solution, collapse = "\n"), "</span>")), "./body/span")
     xml2::xml_add_child(feedback_node, feedback_node_html)
     

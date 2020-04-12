@@ -5,18 +5,11 @@
 <learning_resources>
  <exercise area="QM2" restype="excs" shortname="exshortname">
   <metadata>
-   <time>1</time>
-   <category area="QM2" restype="csp" shortname="catshortname"/>
    <title>Title</title>
   </metadata>
   <question_data>
    <singleanswer>
     <problem_text/>
-    <answer value="false">
-     <answer_text>
-      <p align="left"/>
-     </answer_text>
-    </answer>
     <feedback/>
    </singleanswer>
   </question_data>

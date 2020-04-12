@@ -11,7 +11,7 @@ res <- exp(b * c) * (a * c^(a-1) +
 Question
 ========
 What is the derivative of $f(x) = x^{`r a`} e^{`r b` x}$, evaluated at $x = `r c`$?
-A formula is $$x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}$$.
+A formula is $$x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}.$$
 
 Answerlist
 ----------

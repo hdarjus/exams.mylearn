@@ -13,3 +13,7 @@ at an example file in the package.
 \description{
 Paths to Examples
 }
+\examples{
+ex_files <- example_paths()
+ex_files
+}
