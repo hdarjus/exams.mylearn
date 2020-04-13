@@ -32,9 +32,8 @@ The development team has to turn on the upload functionality on
 a per course basis.
 }
 \examples{
-ex_files <- example_paths()
-exams2mylearn(ex_files["mixture"], "various_options", 2)
 \dontrun{
+ex_files <- example_paths()
 exams2mylearn(ex_files["plot"], "boxplot_exercise", 40)
 exams2mylearn(ex_files["single_choice"], "single_choice_exercise", 40)
 }

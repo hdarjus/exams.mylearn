@@ -43,9 +43,9 @@ output <- exams2mylearn(filename = exercise_file,
                         n = n)
 ```
 
-The output zip file is saved in `output`. One can upload that zip file
-to Learn directly (after the Learn development team has activated that
-feature for the given course).
+The output zip filepath is saved in `output`. One can upload that zip
+file to Learn directly (after the Learn development team has activated
+that feature for the given course).
 
 I have tested the framework with the examples returned by
 `example_paths()`. I managed to upload 100 questions to Learn at the
