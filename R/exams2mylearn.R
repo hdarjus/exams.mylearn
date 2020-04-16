@@ -11,6 +11,7 @@
 #' @param name (character) unique name of output files
 #' @param n (integer) number of random variants to create
 #' @param dir (character, optional) output directory, defaults to the currect working directory
+#' @param ... forwarded to \code{exams2html}
 #' @return As a side effect, the function produces a zip file in the working
 #' directory. The exact path to the zip file is returned invisibly.
 #' @note The development team has to turn on the upload functionality on
@@ -22,7 +23,7 @@
 #' exams2mylearn(ex_files["single_choice"], "single_choice_exercise", 40)
 #' }
 #' @export
-exams2mylearn <- function (filename, name, n, dir = ".") {
+exams2mylearn <- function (filename, name, n, dir = ".", ...) {
   tmpdir <- base::tempdir()
   outdir <- base::normalizePath(dir, mustWork = FALSE)
   outfile <- base::file.path(outdir, glue::glue("{name}.zip"))
@@ -56,7 +57,7 @@ exams2mylearn <- function (filename, name, n, dir = ".") {
   base::message("Step 1: Generating exams in HTML format...")
   # Generate exams both in R list and in .html
   xexm <- exams::exams2html(filename, name = glue::glue("{name}_v"), n = n,
-                            dir = tmpdir, converter = "pandoc-mathjax")
+                            dir = tmpdir, converter = "pandoc-mathjax", ...)
   base::message("Step 1: Done")
   
   base::message("Step 2: Converting from HTML to XML\r\n", appendLF=FALSE)
@@ -84,7 +85,7 @@ exams2mylearn <- function (filename, name, n, dir = ".") {
     title_node_temp <- xml2::xml_find_first(output, "./exercise/metadata/title")
     xml2::xml_text(title_node_temp) <- title_text
     ## Replace question
-    q_node_html <- xml2::xml_find_first(xml2::read_html(stringr::str_c("<span>", stringr::str_c(exercise_exams$question, collapse = "\n"), "</span>")), "./body/span")
+    q_node_html <- xml2::read_xml(stringr::str_c("<span>", stringr::str_c(exercise_exams$question, collapse = "\n"), "</span>"))
     q_node <- xml2::xml_find_first(output, glue::glue("./exercise/question_data/{type}/problem_text"))
     xml2::xml_add_child(q_node, q_node_html)
     ## Replace short name
@@ -97,14 +98,14 @@ exams2mylearn <- function (filename, name, n, dir = ".") {
       ans_node_temp <- xml2::read_xml(stringr::str_c('<answer value="', stringr::str_to_lower(exercise_exams$metainfo$solution[i]), '"> <answer_text/> </answer>'))
       # Construct answer html nodes
       ans_str <- exercise_exams$questionlist[i]
-      ans_node_html <- xml2::xml_find_first(xml2::read_html(stringr::str_c("<p align=\"left\">", ans_str, "</p>")), "./body/p")
+      ans_node_html <- xml2::read_xml(stringr::str_c("<p align=\"left\">", ans_str, "</p>"))
       xml2::xml_add_child(mult_node, ans_node_temp,
                     .where = base::length(xml2::xml_children(mult_node))-1)
       ans_node <- xml2::xml_find_first(output, glue::glue("./exercise/question_data/{type}/answer[{i}]/answer_text"))
       xml2::xml_add_child(ans_node, ans_node_html)
     }
     feedback_node <- xml2::xml_find_first(output, glue::glue("./exercise/question_data/{type}/feedback"))
-    feedback_node_html <- xml2::xml_find_first(xml2::read_html(stringr::str_c("<span>", stringr::str_c(exercise_exams$solution, collapse = "\n"), "</span>")), "./body/span")
+    feedback_node_html <- xml2::read_xml(stringr::str_c("<span>", stringr::str_c(exercise_exams$solution, collapse = "\n"), "</span>"))
     xml2::xml_add_child(feedback_node, feedback_node_html)
     
     fileout <- base::file.path(tmpdir, glue::glue("{name}_v{num}.xml"))

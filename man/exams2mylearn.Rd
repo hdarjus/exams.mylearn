@@ -4,7 +4,7 @@
 \alias{exams2mylearn}
 \title{Exam Generation for the MyLearn Platform}
 \usage{
-exams2mylearn(filename, name, n, dir = ".")
+exams2mylearn(filename, name, n, dir = ".", ...)
 }
 \arguments{
 \item{filename}{(character) absolute or relative path to the exercise template.
@@ -15,6 +15,8 @@ Usually simply a filename pointing at a .Rmd file in the working directory}
 \item{n}{(integer) number of random variants to create}
 
 \item{dir}{(character, optional) output directory, defaults to the currect working directory}
+
+\item{...}{forwarded to \code{exams2html}}
 }
 \value{
 As a side effect, the function produces a zip file in the working
