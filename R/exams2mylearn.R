@@ -8,9 +8,13 @@
 #' 
 #' @param filename (character) absolute or relative path to the exercise template.
 #' Usually simply a filename pointing at a .Rmd file in the working directory
-#' @param name (character) unique name of output files
 #' @param n (integer) number of random variants to create
-#' @param dir (character, optional) output directory, defaults to the currect working directory
+#' @param name (character, optional) unique name prefix of temporary and output files,
+#' defaults to \code{filename} withour the non-alphabetic characters
+#' @param dir (character, optional) output directory, defaults to a temporary directory
+#' @param outfile (character, optional) output filename (not a path), defaults to \code{name}.zip
+#' @param distort.shortname (logical, optional) should the shortname include a random ending?
+#' Defaults to \code{FALSE}
 #' @param ... forwarded to \code{exams2html}
 #' @return As a side effect, the function produces a zip file in the working
 #' directory. The exact path to the zip file is returned invisibly.
@@ -19,17 +23,37 @@
 #' @examples
 #' \dontrun{
 #' ex_files <- example_paths()
-#' exams2mylearn(ex_files["plot"], "boxplot_exercise", 40)
-#' exams2mylearn(ex_files["single_choice"], "single_choice_exercise", 40)
+#' exams2mylearn(ex_files["plot"], 40, dir = ".", outfile = "final_exam.zip", distort.shortname = TRUE)
+#' exams2mylearn(ex_files["single_choice"], 500, dir = ".", verbose = TRUE)
 #' }
 #' @export
-exams2mylearn <- function (filename, name, n, dir = ".", ...) {
+exams2mylearn <- function (filename, n, name = NULL, dir = NULL, outfile = NULL,
+                           dontask = !base::interactive(),
+                           distort.shortname = FALSE, ...) {
+  if (missing(name) || is.null(name)) {
+    name <- stringr::str_to_lower(stringr::str_replace_all(filename, '[^[:alnum:]]', ''))
+  } else if (!is.character(name) || length(name) != 1L) {
+    base::stop("Parameter 'name' has to a character string")
+  }
   tmpdir <- base::tempdir()
+  if (missing(dir) || is.null(dir)) {
+    dir <- tmpdir
+  }
   outdir <- base::normalizePath(dir, mustWork = FALSE)
-  outfile <- base::file.path(outdir, glue::glue("{name}.zip"))
-  
-  if (base::file.exists(outfile)) {
-    warning(outfile, " exists. Consider deleting it or specifying another 'name' parameter and rerunning.")
+  if (missing(outfile) || is.null(outfile)) {
+    outfile <- base::file.path(outdir, glue::glue("{name}.zip"))
+  }
+  if (base::file.exists(outfile) && !dontask) {
+    input <- base::readline(base::paste(outfile, "exists. Are you sure you want to modify it? Y/n\n"))
+    if (stringr::str_length(input) > 0L && !(stringr::str_to_lower(input) %in% c("y", "yes"))) {
+      base::message("Finishing...")
+      base::return()
+    }
+  }
+  shortname_ending <- if (isTRUE(distort.shortname)) {
+    stringr::str_c(base::sample(base::LETTERS, 8), collapse = "")
+  } else {
+    ""
   }
   
   template.path <- c(
@@ -74,7 +98,7 @@ exams2mylearn <- function (filename, name, n, dir = ".", ...) {
   to_zip <- character(0)
   for (num in base::seq_len(n)) {
     # Extract current exercise in R list format
-    exercise_exams <- xexm[[glue::glue("exam{stringr::str_pad(num, stringr::str_length(n), side = 'left', pad = '0')}")]]$exercise1
+    exercise_exams <- xexm[[stringr::str_c("exam", stringr::str_pad(num, stringr::str_length(n), side = 'left', pad = '0'), sep = "")]]$exercise1
     
     # Copy template
     output <- xml2::xml_new_root(xml2::xml_root(template))
@@ -88,9 +112,13 @@ exams2mylearn <- function (filename, name, n, dir = ".", ...) {
     q_node_html <- xml2::read_xml(stringr::str_c("<span>", stringr::str_c(exercise_exams$question, collapse = "\n"), "</span>"))
     q_node <- xml2::xml_find_first(output, glue::glue("./exercise/question_data/{type}/problem_text"))
     xml2::xml_add_child(q_node, q_node_html)
-    ## Replace short name
+    ## Replace shortname
     exercise_node <- xml2::xml_find_first(output, "./exercise")
-    xml2::xml_attr(exercise_node, "shortname") <- glue::glue("{stringr::str_to_lower(stringr::str_replace_all(title_text, '[[:space:]]', ''))}{num}")
+    xml2::xml_attr(exercise_node, "shortname") <- stringr::str_c(stringr::str_to_lower(stringr::str_replace_all(title_text, '[[:space:]]', '')),
+                                                                 stringr::str_to_lower(stringr::str_replace_all(filename, '[^[:alnum:]]', '')),
+                                                                 shortname_ending,
+                                                                 num,
+                                                                 sep = "_")
     ## Process answers options
     mult_node <- xml2::xml_find_first(output, glue::glue("./exercise/question_data/{type}"))
     for (i in base::seq_along(exercise_exams$questionlist)) {

@@ -28,7 +28,7 @@ for (i in seq_along(dat)) {
 ```
 
 Here's a boxplot
-```{r, fig.width=7, fig.asp=1, out.width='600px', eval=TRUE, echo=FALSE}
+```{r, fig.cap="", fig.width=7, fig.asp=1, out.width='600px', echo=FALSE}
 boxplot(boxdat, main = "Beauty")
 ```
 

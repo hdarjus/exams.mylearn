@@ -15,13 +15,10 @@ for (i in seq_along(dat)) {
 
 Answerlist
 ----------
-* 
-```{r, echo=TRUE, eval=FALSE}
-a <- 1:10
-print(a)
-```
+* <pre> a &lt;- 1:10 <br/>
+print(a) </pre>
 
-* Two
+* For some reason, code in the answerlist only works if it's already formatted as HTML
 * Three
 
 Solution

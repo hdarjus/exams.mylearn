@@ -4,17 +4,32 @@
 \alias{exams2mylearn}
 \title{Exam Generation for the MyLearn Platform}
 \usage{
-exams2mylearn(filename, name, n, dir = ".", ...)
+exams2mylearn(
+  filename,
+  n,
+  name = NULL,
+  dir = NULL,
+  outfile = NULL,
+  dontask = !base::interactive(),
+  distort.shortname = FALSE,
+  ...
+)
 }
 \arguments{
 \item{filename}{(character) absolute or relative path to the exercise template.
 Usually simply a filename pointing at a .Rmd file in the working directory}
 
-\item{name}{(character) unique name of output files}
-
 \item{n}{(integer) number of random variants to create}
 
-\item{dir}{(character, optional) output directory, defaults to the currect working directory}
+\item{name}{(character, optional) unique name prefix of temporary and output files,
+defaults to \code{filename} withour the non-alphabetic characters}
+
+\item{dir}{(character, optional) output directory, defaults to a temporary directory}
+
+\item{outfile}{(character, optional) output filename (not a path), defaults to \code{name}.zip}
+
+\item{distort.shortname}{(logical, optional) should the shortname include a random ending?
+Defaults to \code{FALSE}}
 
 \item{...}{forwarded to \code{exams2html}}
 }
@@ -36,7 +51,7 @@ a per course basis.
 \examples{
 \dontrun{
 ex_files <- example_paths()
-exams2mylearn(ex_files["plot"], "boxplot_exercise", 40)
-exams2mylearn(ex_files["single_choice"], "single_choice_exercise", 40)
+exams2mylearn(ex_files["plot"], 40, dir = ".", outfile = "final_exam.zip", distort.shortname = TRUE)
+exams2mylearn(ex_files["single_choice"], 500, dir = ".", verbose = TRUE)
 }
 }

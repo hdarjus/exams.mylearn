@@ -5,8 +5,8 @@ dat <- scale(1:30)
 Question
 ========
 Here's a boxplot
-```{r, fig.cap="A beautiful boxplot"}
-boxplot(dat, main = "Beauty")
+```{r, fig.cap="", fig.height = 4, fig.width=7, out.width="600px", echo=FALSE}
+boxplot(dat, main = "Beauty", horizontal = TRUE)
 ```
 
 Answerlist
