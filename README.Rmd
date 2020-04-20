@@ -2,7 +2,7 @@
 title: "Generate Questions for MyLearn"
 output:
   md_document:
-    variant: markdown_github
+    variant: gfm
     toc: true
     toc_depth: 3
   pdf_document:

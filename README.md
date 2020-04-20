@@ -1,24 +1,4 @@
--   [Intro](#intro)
--   [Installation](#installation)
--   [Demo](#demo)
--   [Recommended Workflow](#recommended-workflow)
-    -   [Writing the Question
-        Templates](#writing-the-question-templates)
-    -   [Generating the Exercises](#generating-the-exercises)
-        -   [Tip](#tip)
-    -   [Uploading to MyLearn](#uploading-to-mylearn)
-        -   [First Upload](#first-upload)
-        -   [Re-uploading with the Same
-            Shortname](#re-uploading-with-the-same-shortname)
-    -   [Importing Exercises](#importing-exercises)
-    -   [Organizing a Random Question on
-        MyLearn](#organizing-a-random-question-on-mylearn)
--   [Issues](#issues)
--   [Further Reading](#further-reading)
--   [Maintainance](#maintainance)
-
-Intro
-=====
+# Intro
 
 Randomized multiple-select and single-select question generation for the
 MyLearn platform at the Vienna University of Economics and Business.
@@ -29,25 +9,23 @@ into exams in the Learning Activities.
 
 Dependencies:
 
--   `libxml2`: found on popular Linux distros and in Rtools by default
--   `pandoc`: gets installed by `R` during installation
--   `R`: a recent version
--   popular `R` packages: installed automatically
+  - `libxml2`: found on popular Linux distros and in Rtools by default
+  - `pandoc`: gets installed by `R` during installation
+  - `R`: a recent version
+  - popular `R` packages: installed automatically
 
 The question import functionality has to be turned on by the Learn
 development team per course. Their address is “learn” `at` “wu” `dot`
 “ac” `dot` “at”.
 
-Installation
-============
+# Installation
 
 ``` r
 install.packages("devtools")
 devtools::install_github("https://github.com/hdarjus/WU-MyLearn-QGen")
 ```
 
-Demo
-====
+# Demo
 
 One creates an `R/exams` compatible exercise file similar to
 `example_question.Rmd`, decides for a name prefix and for the number of
@@ -66,11 +44,9 @@ The output .zip filepath is saved in `output`. One can upload that .zip
 file to Learn directly (after the Learn development team has activated
 that feature for the given course).
 
-Recommended Workflow
-====================
+# Recommended Workflow
 
-Writing the Question Templates
-------------------------------
+## Writing the Question Templates
 
 The question templates are the .Rmd files. Find how-to’s in the files
 returned by `example_paths()`. Best starting point is
@@ -89,8 +65,7 @@ exams::exams2html(filename, n = 1L,
 The generated HTML file opened in the browser closely resembles the
 looks of the exercise on MyLearn.
 
-Generating the Exercises
-------------------------
+## Generating the Exercises
 
 Set the current working directory to where the exercise templates are,
 then run the following.
@@ -125,8 +100,7 @@ for (filename in filenames) {
 This way the shortname will be unique every time and you will have more
 feedback on where the generation process is.
 
-Uploading to MyLearn
---------------------
+## Uploading to MyLearn
 
 In the course find *Administrate*, then under *“Old” learning materials*
 click on *organize*. Then under *XML-file* choose the .zip file created
@@ -146,31 +120,28 @@ In this case a smaller list of the re-uploaded exercises is shown.
 Choose all of them and click on *Submit*. This overwrites the old
 versions.
 
-Importing Exercises
--------------------
+## Importing Exercises
 
 Yes, uploading and importing are different steps. In the menu of the
-course’s *Learning activities*, click on *Import* &gt; *Import of
-existing learning materials*. A table of uploaded exercises appears.
+course’s *Learning activities*, click on *Import* \> *Import of existing
+learning materials*. A table of uploaded exercises appears.
 
 Use the filters to filter out your exercises. The most useful filters
 are *Already imported* set to *No* and the text input where you can use
 the unique shortnames.
 
-Select all exercises with one click, then *Selected items* &gt;
-*Import*. This brings you to the imported exercises. Select all and then
-*Selected items* &gt; *Add to clipboard*.
+Select all exercises with one click, then *Selected items* \> *Import*.
+This brings you to the imported exercises. Select all and then *Selected
+items* \> *Add to clipboard*.
 
-Organizing a Random Question on MyLearn
----------------------------------------
+## Organizing a Random Question on MyLearn
 
 Create a new *Poolfolder* in the *Learning activities* and open it.
-Click on *Clipboard* &gt; *Insert content here* and then *ok*. Release
-all questions in the poolfolder otherwise the random question won’t
-work.
+Click on *Clipboard* \> *Insert content here* and then *ok*. Release all
+questions in the poolfolder otherwise the random question won’t work.
 
 Now create a *Proxy* outside of the poolfolder and associate it with the
-poolfolder you created. This was the last step, congratulations!
+poolfolder you created. This was the last step, congratulations\!
 
 The poolfolder contains the pool of questions that the random question
 will choose from. It samples with replacement from the pool each time
@@ -179,17 +150,15 @@ hidden from students.
 
 At this point I recommend that you delete the exercises in the imported
 view. For that: in the menu of the course’s *Learning activities*, click
-on *Import* &gt; *Import of existing learning materials*. Delete all
+on *Import* \> *Import of existing learning materials*. Delete all
 exercises.
 
-Issues
-======
+# Issues
 
 1.  German characters don’t work on Windows.
 2.  MyLearn handles only single select and multiple select questions.
 
-Further Reading
-===============
+# Further Reading
 
 For how to import the generated questions, please contact the learn
 team.
@@ -198,8 +167,7 @@ For how you could use the imported questions, please read up on
 Poolfolders and Proxy questions, Sample Exams, Strict Sequencing Study
 Modules in the MyLearn-Guide.
 
-Maintainance
-============
+# Maintainance
 
 Should you find bugs, please use the [Issue tracker on
 Github](https://github.com/hdarjus/WU-MyLearn-QGen/issues). If you have
