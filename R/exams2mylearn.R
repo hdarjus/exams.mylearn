@@ -30,33 +30,33 @@
 exams2mylearn <- function (filename, n, name = NULL, dir = NULL, outfile = NULL,
                            dontask = !base::interactive(),
                            distort.shortname = FALSE, ...) {
-  if (missing(name) || is.null(name)) {
+  if (base::missing(name) || base::is.null(name)) {
     name <- stringr::str_to_lower(stringr::str_replace_all(filename, '[^[:alnum:]]', ''))
-  } else if (!is.character(name) || length(name) != 1L) {
+  } else if (!base::is.character(name) || base::length(name) != 1L) {
     base::stop("Parameter 'name' has to a character string")
   }
   tmpdir <- base::tempdir()
-  if (missing(dir) || is.null(dir)) {
+  if (base::missing(dir) || base::is.null(dir)) {
     dir <- tmpdir
   }
-  outdir <- base::normalizePath(dir, mustWork = FALSE)
-  if (missing(outfile) || is.null(outfile)) {
+  outdir <- tools::file_path_as_absolute(dir)
+  if (base::missing(outfile) || base::is.null(outfile)) {
     outfile <- base::file.path(outdir, glue::glue("{name}.zip"))
   }
   if (base::file.exists(outfile) && !dontask) {
     input <- base::readline(base::paste(outfile, "exists. Are you sure you want to modify it? Y/n\n"))
-    if (stringr::str_length(input) > 0L && !(stringr::str_to_lower(input) %in% c("y", "yes"))) {
+    if (stringr::str_length(input) > 0L && !(stringr::str_to_lower(input) %in% base::c("y", "yes"))) {
       base::message("Finishing...")
       base::return()
     }
   }
-  shortname_ending <- if (isTRUE(distort.shortname)) {
+  shortname_ending <- if (base::isTRUE(distort.shortname)) {
     stringr::str_c(base::sample(base::LETTERS, 8), collapse = "")
   } else {
     ""
   }
   
-  template.path <- c(
+  template.path <- base::c(
     "multiplechoice" = system.file("extdata", "template-multiple.xml", package = "exams.wuvienna"),
     "singleanswer" = system.file("extdata", "template-single.xml", package = "exams.wuvienna")
     )
@@ -78,9 +78,25 @@ exams2mylearn <- function (filename, n, name = NULL, dir = NULL, outfile = NULL,
   }
   base::message("Temporary directory is ", tmpdir)
   
-  base::message("Step 1: Generating exams in HTML format...")
+  # Handle special characters
+  special_characters <- c("Ä", "Ö", "Ü", "ä", "ß", "ö", "ü")
+  codes <- base::sapply(base::iconv(stringr::str_c(special_characters, collapse = ""),
+                                    to = "latin1", toRaw = TRUE), base::strtoi, base = 16L)
+  html_codes <- stringr::str_c("&#", codes, ";")
+  base::names(html_codes) <- special_characters
+  content <- base::readLines(filename)
+  for (sp_char in base::names(html_codes)) {
+    content <- stringr::str_replace_all(content, sp_char, html_codes[sp_char])
+  }
+  modified_filename <- base::tempfile(pattern = tools::file_path_sans_ext(base::basename(filename)),
+                                      tmpdir = tmpdir,
+                                      fileext = stringr::str_c(".", tools::file_ext(filename), sep = ""))
+  base::writeLines(content, modified_filename)
+  
   # Generate exams both in R list and in .html
-  xexm <- exams::exams2html(filename, name = glue::glue("{name}_v"), n = n,
+  base::message("Step 1: Generating exams in HTML format...")
+  xexm <- exams::exams2html(modified_filename,
+                            name = glue::glue("{name}_v"), n = n,
                             dir = tmpdir, converter = "pandoc-mathjax", ...)
   base::message("Step 1: Done")
   
@@ -95,7 +111,7 @@ exams2mylearn <- function (filename, n, name = NULL, dir = NULL, outfile = NULL,
   type <- if (single_choice) "singleanswer" else "multiplechoice"
   # Read the XML template
   template <- xml2::read_xml(template.path[type])
-  to_zip <- character(0)
+  to_zip <- base::character(0)
   for (num in base::seq_len(n)) {
     # Extract current exercise in R list format
     exercise_exams <- xexm[[stringr::str_c("exam", stringr::str_pad(num, stringr::str_length(n), side = 'left', pad = '0'), sep = "")]]$exercise1

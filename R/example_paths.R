@@ -14,6 +14,7 @@ example_paths <- function () {
     "R_code" = system.file("extdata", "R-code.Rmd", package = "exams.wuvienna"),
     "R_output" = system.file("extdata", "R-output.Rmd", package = "exams.wuvienna"),
     "R_table" = system.file("extdata", "R-table.Rmd", package = "exams.wuvienna"),
-    "single_choice" = system.file("extdata", "single-choice.Rmd", package = "exams.wuvienna")
+    "single_choice" = system.file("extdata", "single-choice.Rmd", package = "exams.wuvienna"),
+    "special_characters" = system.file("extdata", "special-characters.Rmd", package = "exams.wuvienna")
   )
 }
