@@ -100,6 +100,15 @@ for (filename in filenames) {
 This way the shortname will be unique every time and you will have more
 feedback on where the generation process is.
 
+### Special Characters on Windows
+
+The .Rmd file is assumed to have UTF-8 encoding. That is important in
+case the .Rmd file contains special (e.g. German) characters.
+
+In RStudio, one can choose the encoding for file reading under *File* \>
+*Reopen with Encoding*, and for file writing under *File* \> *Save with
+Encoding*. It is recommended to do both with UTF-8.
+
 ## Uploading to MyLearn
 
 In the course find *Administrate*, then under *“Old” learning materials*
