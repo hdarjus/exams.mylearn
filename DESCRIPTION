@@ -1,5 +1,5 @@
 Package: exams.wuvienna
-Title: Question Generation in the MyLearn XML Format
+Title: Question Generation in the 'MyLearn' XML Format
 Version: 0.2
 Authors@R: 
     person(given = "Darjus",
@@ -8,10 +8,10 @@ Authors@R:
            email = "darjus.hosszejni@wu.ac.at",
            comment = c(ORCID = "0000-0002-3803-691X"))
 Description: Randomized multiple-select and single-select
-  question generation for the MyLearn platform at the Vienna
+  question generation for the 'MyLearn' platform at the Vienna
   University of Economics and Business. Question templates
   in the form of the R/exams package (see <http://www.r-exams.org/>)
-  are transformed into MyLearn's XML format.
+  are transformed into XML format required by 'MyLearn'.
 License: GPL-3
 Depends:
   R (>= 3.3.0)

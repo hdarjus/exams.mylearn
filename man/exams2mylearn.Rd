@@ -2,13 +2,13 @@
 % Please edit documentation in R/exams2mylearn.R
 \name{exams2mylearn}
 \alias{exams2mylearn}
-\title{Exam Generation for the MyLearn Platform}
+\title{Exam Generation for the 'MyLearn' Platform}
 \usage{
 exams2mylearn(
   filename,
   n,
+  dir,
   name = NULL,
-  dir = NULL,
   outfile = NULL,
   dontask = !base::interactive(),
   distort.shortname = FALSE,
@@ -21,12 +21,14 @@ Usually simply a filename pointing at a .Rmd file in the working directory}
 
 \item{n}{(integer) number of random variants to create}
 
+\item{dir}{(character) output directory, will be created if non-existent}
+
 \item{name}{(character, optional) unique name prefix of temporary and output files,
 defaults to \code{filename} withour the non-alphabetic characters}
 
-\item{dir}{(character, optional) output directory, defaults to a temporary directory}
-
 \item{outfile}{(character, optional) output filename (not a path), defaults to \code{name}.zip}
+
+\item{dontask}{(logical, optional) if \code{TRUE} and the output zip file exists then}
 
 \item{distort.shortname}{(logical, optional) should the shortname include a random ending?
 Defaults to \code{FALSE}}
@@ -34,15 +36,16 @@ Defaults to \code{FALSE}}
 \item{...}{forwarded to \code{exams2html}}
 }
 \value{
-As a side effect, the function produces a zip file in the working
-directory. The exact path to the zip file is returned invisibly.
+As a side effect, the function produces a zip file in directory \code{dir}.
+If \code{dir} is invalid or unspecified, the function returns with an error.
+The exact path to the zip file is returned invisibly.
 }
 \description{
 The Vienna University of Economics and Business has a special
-XML format on its teaching platform MyLearn. \code{exams2mylearn} transforms
-input files in the R/exams to XML files and zips them. The resulting
-zip file can be directly uploaded to the MyLearn platform after having
-contected the MyLearn development team.
+XML format on its teaching platform 'MyLearn'. \code{exams2mylearn} transforms
+input files in the R/exams format to XML files and zips them. The resulting
+zip file can be directly uploaded to the 'MyLearn' platform after having
+contacted the 'MyLearn' development team.
 }
 \note{
 The development team has to turn on the upload functionality on
@@ -51,7 +54,9 @@ a per course basis.
 \examples{
 \dontrun{
 ex_files <- example_paths()
-exams2mylearn(ex_files["plot"], 40, dir = ".", outfile = "final_exam.zip", distort.shortname = TRUE)
+exams2mylearn(ex_files["plot"], 40, dir = ".",
+              outfile = "final_exam.zip",
+              distort.shortname = TRUE)
 exams2mylearn(ex_files["single_choice"], 500, dir = ".", verbose = TRUE)
 }
 }

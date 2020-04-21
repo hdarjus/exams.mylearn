@@ -4,11 +4,11 @@
 \name{exams.wuvienna-package}
 \alias{exams.wuvienna-package}
 \alias{exams.wuvienna}
-\title{Question Generation in the MyLearn XML Format}
+\title{Question Generation in the 'MyLearn' XML Format}
 \description{
 Randomized multiple-select and single-select
-question generation for the MyLearn platform at the Vienna
+question generation for the 'MyLearn' platform at the Vienna
 University of Economics and Business. Question templates
 in the form of the R/exams package
-are transformed into MyLearn's XML format.
+are transformed into XML format required by 'MyLearn'.
 }

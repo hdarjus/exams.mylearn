@@ -1,33 +1,37 @@
-#' Exam Generation for the MyLearn Platform
+#' Exam Generation for the 'MyLearn' Platform
 #' 
 #' The Vienna University of Economics and Business has a special
-#' XML format on its teaching platform MyLearn. \code{exams2mylearn} transforms
-#' input files in the R/exams to XML files and zips them. The resulting
-#' zip file can be directly uploaded to the MyLearn platform after having
-#' contected the MyLearn development team.
+#' XML format on its teaching platform 'MyLearn'. \code{exams2mylearn} transforms
+#' input files in the R/exams format to XML files and zips them. The resulting
+#' zip file can be directly uploaded to the 'MyLearn' platform after having
+#' contacted the 'MyLearn' development team.
 #' 
 #' @param filename (character) absolute or relative path to the exercise template.
 #' Usually simply a filename pointing at a .Rmd file in the working directory
 #' @param n (integer) number of random variants to create
+#' @param dir (character) output directory, will be created if non-existent
 #' @param name (character, optional) unique name prefix of temporary and output files,
 #' defaults to \code{filename} withour the non-alphabetic characters
-#' @param dir (character, optional) output directory, defaults to a temporary directory
 #' @param outfile (character, optional) output filename (not a path), defaults to \code{name}.zip
+#' @param dontask (logical, optional) if \code{TRUE} and the output zip file exists then
 #' @param distort.shortname (logical, optional) should the shortname include a random ending?
 #' Defaults to \code{FALSE}
 #' @param ... forwarded to \code{exams2html}
-#' @return As a side effect, the function produces a zip file in the working
-#' directory. The exact path to the zip file is returned invisibly.
+#' @return As a side effect, the function produces a zip file in directory \code{dir}.
+#' If \code{dir} is invalid or unspecified, the function returns with an error.
+#' The exact path to the zip file is returned invisibly.
 #' @note The development team has to turn on the upload functionality on
 #' a per course basis.
 #' @examples
 #' \dontrun{
 #' ex_files <- example_paths()
-#' exams2mylearn(ex_files["plot"], 40, dir = ".", outfile = "final_exam.zip", distort.shortname = TRUE)
+#' exams2mylearn(ex_files["plot"], 40, dir = ".",
+#'               outfile = "final_exam.zip",
+#'               distort.shortname = TRUE)
 #' exams2mylearn(ex_files["single_choice"], 500, dir = ".", verbose = TRUE)
 #' }
 #' @export
-exams2mylearn <- function (filename, n, name = NULL, dir = NULL, outfile = NULL,
+exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
                            dontask = !base::interactive(),
                            distort.shortname = FALSE, ...) {
   if (base::missing(name) || base::is.null(name)) {
@@ -36,12 +40,18 @@ exams2mylearn <- function (filename, n, name = NULL, dir = NULL, outfile = NULL,
     base::stop("Parameter 'name' has to a character string")
   }
   tmpdir <- base::tempdir()
-  if (base::missing(dir) || base::is.null(dir)) {
-    dir <- tmpdir
+  if (!base::dir.exists(dir)) {
+    base::warning("Creting new directory", dir)
+    base::dir.create(dir, showWarnings = FALSE, recursive = TRUE)
+    if (!base::dir.exists(dir)) {
+      base::stop("Unable to create", dir)
+    }
   }
   outdir <- tools::file_path_as_absolute(dir)
   if (base::missing(outfile) || base::is.null(outfile)) {
     outfile <- base::file.path(outdir, glue::glue("{name}.zip"))
+  } else if (outfile != base::basename(outfile)) {
+    base::stop("Parameter 'outfile' should be a file name without a file path")
   }
   if (base::file.exists(outfile) && !dontask) {
     input <- base::readline(base::paste(outfile, "exists. Are you sure you want to modify it? Y/n\n"))
@@ -79,7 +89,7 @@ exams2mylearn <- function (filename, n, name = NULL, dir = NULL, outfile = NULL,
   base::message("Temporary directory is ", tmpdir)
   
   # Handle special characters
-  special_characters <- c("Ä", "Ö", "Ü", "ä", "ß", "ö", "ü")
+  special_characters <- c("\u00c4", "\u00d6", "\u00dc", "\u00df", "\u00e4", "\u00f6", "\u00fc")
   codes <- base::sapply(base::iconv(stringr::str_c(special_characters, collapse = ""),
                                     to = "latin1", toRaw = TRUE), base::strtoi, base = 16L)
   html_codes <- stringr::str_c("&#", codes, ";")
