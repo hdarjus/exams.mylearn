@@ -89,9 +89,9 @@ exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
   base::message("Temporary directory is ", tmpdir)
   
   # Handle special characters
-  special_characters <- c("\u00c4", "\u00d6", "\u00dc", "\u00df", "\u00e4", "\u00f6", "\u00fc")
-  codes <- base::sapply(base::iconv(stringr::str_c(special_characters, collapse = ""),
-                                    to = "latin1", toRaw = TRUE), base::strtoi, base = 16L)
+  special_character_codes <- base::c("00c4", "00d6", "00dc", "00df", "00e4", "00f6", "00fc")
+  special_characters <- stringi::stri_unescape_unicode(stringr::str_c("\\u", special_character_codes, sep = ""))
+  codes <- base::as.integer(base::as.hexmode(special_character_codes))
   html_codes <- stringr::str_c("&#", codes, ";")
   base::names(html_codes) <- special_characters
   content <- base::readLines(filename)
