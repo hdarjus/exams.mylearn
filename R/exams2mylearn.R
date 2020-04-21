@@ -89,25 +89,27 @@ exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
   base::message("Temporary directory is ", tmpdir)
   
   # Handle special characters
-  special_character_codes <- base::c("00c4", "00d6", "00dc", "00df", "00e4", "00f6", "00fc")
-  special_characters <- stringi::stri_unescape_unicode(stringr::str_c("\\u", special_character_codes, sep = ""))
-  codes <- base::as.integer(base::as.hexmode(special_character_codes))
-  html_codes <- stringr::str_c("&#", codes, ";")
-  base::names(html_codes) <- special_characters
-  content <- base::readLines(filename)
-  for (sp_char in base::names(html_codes)) {
-    content <- stringr::str_replace_all(content, sp_char, html_codes[sp_char])
-  }
+  #special_character_codes <- base::c("00c4", "00d6", "00dc", "00df", "00e4", "00f6", "00fc")
+  #special_characters <- stringi::stri_unescape_unicode(stringr::str_c("\\u", special_character_codes, sep = ""))
+  #codes <- base::as.integer(base::as.hexmode(special_character_codes))
+  #html_codes <- stringr::str_c("&#", codes, ";")
+  #base::names(html_codes) <- special_characters
+  content <- base::readLines(filename, encoding = "UTF-8")
+  content <- base::enc2utf8(content)
+  #for (sp_char in base::names(html_codes)) {
+  #  content <- stringr::str_replace_all(content, sp_char, html_codes[sp_char])
+  #}
   modified_filename <- base::tempfile(pattern = tools::file_path_sans_ext(base::basename(filename)),
                                       tmpdir = tmpdir,
                                       fileext = stringr::str_c(".", tools::file_ext(filename), sep = ""))
-  base::writeLines(content, modified_filename)
+  base::writeLines(content, modified_filename, useBytes = TRUE)
   
   # Generate exams both in R list and in .html
   base::message("Step 1: Generating exams in HTML format...")
   xexm <- exams::exams2html(modified_filename,
                             name = glue::glue("{name}_v"), n = n,
-                            dir = tmpdir, converter = "pandoc-mathjax", ...)
+                            dir = tmpdir, converter = "pandoc-mathjax",
+                            encoding = "UTF-8", ...)
   base::message("Step 1: Done")
   
   base::message("Step 2: Converting from HTML to XML\r\n", appendLF=FALSE)
@@ -115,12 +117,12 @@ exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
   # Single or multiple choice?
   single_choice <- xexm[[1]][[1]]$metainfo$type == "schoice"
   multiple_choice <- xexm[[1]][[1]]$metainfo$type == "mchoice"
-  if (!xor(single_choice, multiple_choice)) {
+  if (!base::xor(single_choice, multiple_choice)) {
     base::stop("Unknown exercise type. Only single choice (schoice) and multiple choice (mchoice) are allowed!")
   }
   type <- if (single_choice) "singleanswer" else "multiplechoice"
   # Read the XML template
-  template <- xml2::read_xml(template.path[type])
+  template <- xml2::read_xml(template.path[type], encoding = "UTF-8")
   to_zip <- base::character(0)
   for (num in base::seq_len(n)) {
     # Extract current exercise in R list format
@@ -163,7 +165,7 @@ exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
     xml2::xml_add_child(feedback_node, feedback_node_html)
     
     fileout <- base::file.path(tmpdir, glue::glue("{name}_v{num}.xml"))
-    xml2::write_xml(output, fileout)
+    xml2::write_xml(output, fileout, encoding = "UTF-8")
     to_zip <- c(to_zip, fileout)
   }
   base::message("\nStep 2: Done")
