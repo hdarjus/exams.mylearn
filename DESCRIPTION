@@ -22,7 +22,7 @@ Imports:
   xml2 (>= 1.2.5)
 Suggests:
   knitr
-URL: https://learn.wu.ac.at
+URL: https://learn.wu.ac.at, https://github.com/hdarjus/WU-MyLearn-QGen
 BugReports: https://github.com/hdarjus/WU-MyLearn-QGen/issues
 Encoding: UTF-8
 LazyData: true
