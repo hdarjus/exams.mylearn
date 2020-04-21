@@ -1,6 +1,6 @@
 Package: exams.wuvienna
 Title: Question Generation in the 'MyLearn' XML Format
-Version: 0.3
+Version: 1.0
 Authors@R: 
     person(given = "Darjus",
            family = "Hosszejni",
