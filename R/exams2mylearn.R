@@ -88,7 +88,7 @@ exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
   }
   base::message("Temporary directory is ", tmpdir)
   
-  # Handle special characters
+  # Handle special characters. Without this trick pandoc ruins some inputs
   special_character_codes <- base::c("00c4", "00d6", "00dc", "00df", "00e4", "00f6", "00fc")
   special_characters <- stringi::stri_unescape_unicode(stringr::str_c("\\u", special_character_codes, sep = ""))
   codes <- base::as.integer(base::as.hexmode(special_character_codes))
