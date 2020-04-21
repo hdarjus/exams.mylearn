@@ -13,8 +13,20 @@ output:
     toc: true
     toc_depth: 3
     number_sections: true
+  rmarkdown::html_vignette: default
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Generate Questions for MyLearn}
+  %\VignetteEncoding{UTF-8}
 author: Darjus Hosszejni, WU Vienna
 ---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 
 # Intro
 

@@ -13,14 +13,19 @@ Description: Randomized multiple-select and single-select
   in the form of the R/exams package (see <http://www.r-exams.org/>)
   are transformed into MyLearn's XML format.
 License: GPL-3
-Depends: R (>= 3.3.0)
+Depends:
+  R (>= 3.3.0)
 Imports:
   exams (>= 2.3-4),
   glue (>= 1.4.0),
   stringr (>= 1.4.0),
   xml2 (>= 1.2.5)
+Suggests:
+  knitr
 URL: https://learn.wu.ac.at
 BugReports: https://github.com/hdarjus/WU-MyLearn-QGen/issues
 Encoding: UTF-8
 LazyData: true
+VignetteBuilder: 
+  knitr
 RoxygenNote: 7.1.0
