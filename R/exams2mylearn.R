@@ -54,7 +54,7 @@ exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
     base::stop("Parameter 'outfile' should be a file name without a file path")
   }
   if (base::file.exists(outfile) && !dontask) {
-    input <- base::readline(base::paste(outfile, "exists. Are you sure you want to modify it? Y/n\n"))
+    input <- base::readline(base::paste(outfile, "exists. Are you sure you want to modify it? (Y/n) "))
     if (stringr::str_length(input) > 0L && !(stringr::str_to_lower(input) %in% base::c("y", "yes"))) {
       base::message("Finishing...")
       base::return()
@@ -89,19 +89,20 @@ exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
   base::message("Temporary directory is ", tmpdir)
   
   # Handle special characters
-  #special_character_codes <- base::c("00c4", "00d6", "00dc", "00df", "00e4", "00f6", "00fc")
-  #special_characters <- stringi::stri_unescape_unicode(stringr::str_c("\\u", special_character_codes, sep = ""))
-  #codes <- base::as.integer(base::as.hexmode(special_character_codes))
-  #html_codes <- stringr::str_c("&#", codes, ";")
-  #base::names(html_codes) <- special_characters
+  special_character_codes <- base::c("00c4", "00d6", "00dc", "00df", "00e4", "00f6", "00fc")
+  special_characters <- stringi::stri_unescape_unicode(stringr::str_c("\\u", special_character_codes, sep = ""))
+  codes <- base::as.integer(base::as.hexmode(special_character_codes))
+  placeholder <- "JJJ11111EIRRAAOOSDFKLJWE91AAAAVVA33SDPPOIDI111DIWEOROFJJSJS444DFLDKKS4L"
+  html_codes <- stringr::str_c(placeholder, "#", codes, ";")
+  base::names(html_codes) <- special_characters
   content <- base::readLines(filename, encoding = "UTF-8")
   content <- base::enc2utf8(content)
-  #for (sp_char in base::names(html_codes)) {
-  #  content <- stringr::str_replace_all(content, sp_char, html_codes[sp_char])
-  #}
+  for (sp_char in base::names(html_codes)) {
+    content <- stringr::str_replace_all(content, sp_char, html_codes[sp_char])
+  }
   modified_filename <- base::tempfile(pattern = tools::file_path_sans_ext(base::basename(filename)),
                                       tmpdir = tmpdir,
-                                      fileext = stringr::str_c(".", tools::file_ext(filename), sep = ""))
+                                      fileext = stringr::str_c(".", tools::file_ext(filename)))
   base::writeLines(content, modified_filename, useBytes = TRUE)
   
   # Generate exams both in R list and in .html
@@ -126,7 +127,11 @@ exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
   to_zip <- base::character(0)
   for (num in base::seq_len(n)) {
     # Extract current exercise in R list format
-    exercise_exams <- xexm[[stringr::str_c("exam", stringr::str_pad(num, stringr::str_length(n), side = 'left', pad = '0'), sep = "")]]$exercise1
+    exercise_exams <- xexm[[stringr::str_c("exam", stringr::str_pad(num, stringr::str_length(n), side = 'left', pad = '0'))]]$exercise1
+    exercise_exams$question <- stringr::str_replace_all(exercise_exams$question, placeholder, "&")
+    exercise_exams$questionlist <- stringr::str_replace_all(exercise_exams$questionlist, placeholder, "&")
+    exercise_exams$solution <- stringr::str_replace_all(exercise_exams$solution, placeholder, "&")
+    exercise_exams$metainfo$name <- stringr::str_replace_all(exercise_exams$metainfo$name, placeholder, "&")
     
     # Copy template
     output <- xml2::xml_new_root(xml2::xml_root(template))
