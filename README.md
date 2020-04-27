@@ -1,11 +1,11 @@
 # Intro
 
 Randomized multiple-select and single-select question generation for the
-MyLearn platform at the Vienna University of Economics and Business.
-Question templates in the form of the [R/exams](http://www.r-exams.org/)
-package are transformed into MyLearn’s XML format. Note that the
-feedback has to stay simple. The imported questions can be organized
-into exams in the Learning Activities.
+MyLearn teaching platform used by universities. Question templates in
+the form of the [R/exams](http://www.r-exams.org/) package are
+transformed into MyLearn’s XML format. Note that the feedback has to
+stay simple, see the [Issues](#Issues) section. The imported questions
+can be organized into exams in the Learning Activities.
 
 Dependencies:
 
@@ -21,8 +21,7 @@ development team per course. Their address is “learn” `at` “wu” `dot`
 # Installation
 
 ``` r
-install.packages("devtools")
-devtools::install_github("https://github.com/hdarjus/WU-MyLearn-QGen")
+install.packages("exams.mylearn")
 ```
 
 # Demo
@@ -32,7 +31,7 @@ One creates an `R/exams` compatible exercise file similar to
 generated exams.
 
 ``` r
-library("exams.wuvienna")
+library("exams.mylearn")
 n <- 10L  # number of variants of the exercise
 name <- "learn_exercise"  # prefix of the generated file names
 exercise_file <- example_paths()["R_table"]
@@ -165,22 +164,9 @@ exercises.
 # Issues
 
 1.  MyLearn handles only single select and multiple select questions.
-2.  "Answerlist" in the Solution block doesn't work with MyLearn.
-
-# Further Reading
-
-For how to import the generated questions, please contact the learn
-team.
-
-For how you could use the imported questions, please read up on
-Poolfolders and Proxy questions, Sample Exams, Strict Sequencing Study
-Modules in the MyLearn-Guide.
+2.  “Answerlist” in the Solution block doesn’t work on MyLearn.
 
 # Maintainance
 
-Should you find bugs, please use the [Issue tracker on
-Github](https://github.com/hdarjus/WU-MyLearn-QGen/issues). If you have
-a minimal example of a .Rmd question that does not compile or Learn
-gives an error at the stage of import, you can contact me under “darjus”
-`dot` “hosszejni” `at` “wu” `dot` “ac” `dot` “at”. Please attach the
-.Rmd file in question.
+Should you find bugs or request features, please use the [Issue tracker
+on Github](https://github.com/hdarjus/WU-MyLearn-QGen/issues).

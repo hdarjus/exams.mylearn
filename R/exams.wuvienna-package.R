@@ -1,13 +1,12 @@
 #' Question Generation in the 'MyLearn' XML Format
 #' 
 #' Randomized multiple-select and single-select
-#' question generation for the 'MyLearn' platform at the Vienna
-#' University of Economics and Business. Question templates
+#' question generation for the 'MyLearn' platform. Question templates
 #' in the form of the R/exams package
 #' are transformed into XML format required by 'MyLearn'.
 #' 
-#' @name exams.wuvienna-package
-#' @aliases exams.wuvienna
+#' @name exams.mylearn-package
+#' @aliases exams.mylearn
 #' @docType package
 #' @importFrom exams exams2html
 #' @importFrom xml2 read_xml read_html xml_validate xml_attrs xml_find_first xml_find_all xml_text xml_replace xml_attr xml_add_child xml_children write_xml

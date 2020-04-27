@@ -1,10 +1,9 @@
 #' Exam Generation for the 'MyLearn' Platform
 #' 
-#' The Vienna University of Economics and Business has a special
-#' XML format on its teaching platform 'MyLearn'. \code{exams2mylearn} transforms
+#' The 'MyLearn' distance learning and teaching platform has a special XML format.
+#' \code{exams2mylearn} transforms
 #' input files in the R/exams format to XML files and zips them. The resulting
-#' zip file can be directly uploaded to the 'MyLearn' platform after having
-#' contacted the 'MyLearn' development team.
+#' zip file can be directly uploaded to the 'MyLearn' platform.
 #' 
 #' @param filename (character) absolute or relative path to the exercise template.
 #' Usually simply a filename pointing at a .Rmd file in the working directory
