@@ -21,7 +21,8 @@ development team per course. Their address is “learn” `at` “wu” `dot`
 # Installation
 
 ``` r
-install.packages("exams.mylearn")
+install.packages("devtools")
+devtools::install_github("https://github.com/hdarjus/WU-MyLearn-QGen")
 ```
 
 # Demo
