@@ -165,6 +165,7 @@ exercises.
 # Issues
 
 1.  MyLearn handles only single select and multiple select questions.
+2.  "Answerlist" in the Solution block doesn't work with MyLearn.
 
 # Further Reading
 
