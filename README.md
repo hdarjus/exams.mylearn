@@ -164,8 +164,7 @@ exercises.
 
 # Issues
 
-1.  German characters don’t work on Windows.
-2.  MyLearn handles only single select and multiple select questions.
+1.  MyLearn handles only single select and multiple select questions.
 
 # Further Reading
 
