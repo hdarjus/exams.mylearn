@@ -43,8 +43,7 @@ Dependencies:
 * `R`: a recent version
 * popular `R` packages: installed automatically
 
-The question import functionality has to be turned on by the Learn development team per course.
-Their address is "learn" `at` "wu" `dot` "ac" `dot` "at".
+The question import functionality might have to be turned on by your MyLearn support team.
 
 # Installation
 
