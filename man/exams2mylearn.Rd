@@ -41,11 +41,10 @@ If \code{dir} is invalid or unspecified, the function returns with an error.
 The exact path to the zip file is returned invisibly.
 }
 \description{
-The Vienna University of Economics and Business has a special
-XML format on its teaching platform 'MyLearn'. \code{exams2mylearn} transforms
+The 'MyLearn' distance learning and teaching platform has a special XML format.
+\code{exams2mylearn} transforms
 input files in the R/exams format to XML files and zips them. The resulting
-zip file can be directly uploaded to the 'MyLearn' platform after having
-contacted the 'MyLearn' development team.
+zip file can be directly uploaded to the 'MyLearn' platform.
 }
 \note{
 The development team has to turn on the upload functionality on
