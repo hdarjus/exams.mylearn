@@ -14,7 +14,8 @@ output:
     toc_depth: 3
     number_sections: true
     keep_md: true
-  rmarkdown::html_vignette: default
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Generate Questions for MyLearn}
   %\VignetteEncoding{UTF-8}
@@ -33,7 +34,7 @@ knitr::opts_chunk$set(
 
 Randomized multiple-select and single-select question generation for the MyLearn teaching platform used by universities.
 Question templates in the form of the [R/exams](http://www.r-exams.org/) package are transformed into MyLearn's XML format.
-Note that the feedback has to stay simple, see the [Issues](#Issues) section.
+Note that the feedback has to stay simple, see the Issues section.
 The imported questions can be organized into exams in the Learning Activities.
 
 Dependencies:
@@ -61,7 +62,8 @@ n <- 10L  # number of variants of the exercise
 name <- "learn_exercise"  # prefix of the generated file names
 exercise_file <- example_paths()["R_table"]
 output <- exams2mylearn(filename = exercise_file,
-                        n = n)
+                        n = n, dir = ".",
+                        outfile = "question_table.zip")
 ```
 
 The output .zip filepath is saved in `output`.

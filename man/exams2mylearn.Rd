@@ -8,6 +8,7 @@ exams2mylearn(
   filename,
   n,
   dir,
+  tdir = NULL,
   name = NULL,
   outfile = NULL,
   dontask = !base::interactive(),
@@ -23,21 +24,23 @@ Usually simply a filename pointing at a .Rmd file in the working directory}
 
 \item{dir}{(character) output directory, will be created if non-existent}
 
-\item{name}{(character, optional) unique name prefix of temporary and output files,
+\item{tdir}{(character, \emph{optional}) temporary directory; will use tempdir() if unspecified}
+
+\item{name}{(character, \emph{optional}) unique name prefix of temporary and output files,
 defaults to \code{filename} withour the non-alphabetic characters}
 
-\item{outfile}{(character, optional) output filename (not a path), defaults to \code{name}.zip}
+\item{outfile}{(character, \emph{optional}) output filename (not a path), defaults to \code{name}.zip}
 
-\item{dontask}{(logical, optional) if \code{TRUE} and the output zip file exists then}
+\item{dontask}{(logical, \emph{optional}) if \code{TRUE} and the output zip file exists then}
 
-\item{distort.shortname}{(logical, optional) should the shortname include a random ending?
+\item{distort.shortname}{(logical, \emph{optional}) should the shortname include a random ending?
 Defaults to \code{FALSE}}
 
 \item{...}{forwarded to \code{exams2html}}
 }
 \value{
-As a side effect, the function produces a zip file in directory \code{dir}.
 If \code{dir} is invalid or unspecified, the function returns with an error.
+Otherwise the function produces a zip file in directory \code{dir}.
 The exact path to the zip file is returned invisibly.
 }
 \description{
@@ -51,11 +54,26 @@ The development team has to turn on the upload functionality on
 a per course basis.
 }
 \examples{
-\dontrun{
+
+# Get the examples provided with the package
 ex_files <- example_paths()
-exams2mylearn(ex_files["plot"], 40, dir = ".",
-              outfile = "final_exam.zip",
-              distort.shortname = TRUE)
-exams2mylearn(ex_files["single_choice"], 500, dir = ".", verbose = TRUE)
+if (interactive()) {
+  # Produce 40 exam questions in the currect directory
+  #   using the example that contains a plot; the
+  #   output is "final_exam.zip", and we want to
+  #   distort the shortname used by 'MyLearn'
+  exams2mylearn(ex_files["plot"], 40, dir = ".",
+                outfile = "final_exam_question_1.zip",
+                distort.shortname = TRUE)
+}
+
+# Takes some time:
+\dontrun{
+# Produce 500 exam questions in the current
+#   directory using a different examplewith more
+#   verbose output from exams::exams2html
+exams2mylearn(ex_files["single_choice"], 500,
+              dir = ".", name = "final_exam_question_1",
+              verbose = TRUE)
 }
 }

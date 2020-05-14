@@ -4,8 +4,8 @@ Randomized multiple-select and single-select question generation for the
 MyLearn teaching platform used by universities. Question templates in
 the form of the [R/exams](http://www.r-exams.org/) package are
 transformed into MyLearn’s XML format. Note that the feedback has to
-stay simple, see the [Issues](#Issues) section. The imported questions
-can be organized into exams in the Learning Activities.
+stay simple, see the Issues section. The imported questions can be
+organized into exams in the Learning Activities.
 
 Dependencies:
 
@@ -14,9 +14,8 @@ Dependencies:
   - `R`: a recent version
   - popular `R` packages: installed automatically
 
-The question import functionality has to be turned on by the Learn
-development team per course. Their address is “learn” `at` “wu” `dot`
-“ac” `dot` “at”.
+The question import functionality might have to be turned on by your
+MyLearn support team.
 
 # Installation
 
@@ -37,7 +36,8 @@ n <- 10L  # number of variants of the exercise
 name <- "learn_exercise"  # prefix of the generated file names
 exercise_file <- example_paths()["R_table"]
 output <- exams2mylearn(filename = exercise_file,
-                        n = n)
+                        n = n, dir = ".",
+                        outfile = "question_table.zip")
 ```
 
 The output .zip filepath is saved in `output`. One can upload that .zip

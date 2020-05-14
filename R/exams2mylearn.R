@@ -9,36 +9,69 @@
 #' Usually simply a filename pointing at a .Rmd file in the working directory
 #' @param n (integer) number of random variants to create
 #' @param dir (character) output directory, will be created if non-existent
-#' @param name (character, optional) unique name prefix of temporary and output files,
+#' @param tdir (character, \emph{optional}) temporary directory; will use tempdir() if unspecified
+#' @param name (character, \emph{optional}) unique name prefix of temporary and output files,
 #' defaults to \code{filename} withour the non-alphabetic characters
-#' @param outfile (character, optional) output filename (not a path), defaults to \code{name}.zip
-#' @param dontask (logical, optional) if \code{TRUE} and the output zip file exists then
-#' @param distort.shortname (logical, optional) should the shortname include a random ending?
+#' @param outfile (character, \emph{optional}) output filename (not a path), defaults to \code{name}.zip
+#' @param dontask (logical, \emph{optional}) if \code{TRUE} and the output zip file exists then
+#' @param distort.shortname (logical, \emph{optional}) should the shortname include a random ending?
 #' Defaults to \code{FALSE}
 #' @param ... forwarded to \code{exams2html}
-#' @return As a side effect, the function produces a zip file in directory \code{dir}.
+#' @return 
 #' If \code{dir} is invalid or unspecified, the function returns with an error.
+#' Otherwise the function produces a zip file in directory \code{dir}.
 #' The exact path to the zip file is returned invisibly.
 #' @note The development team has to turn on the upload functionality on
 #' a per course basis.
 #' @examples
-#' \dontrun{
+#' 
+#' # Get the examples provided with the package
 #' ex_files <- example_paths()
-#' exams2mylearn(ex_files["plot"], 40, dir = ".",
-#'               outfile = "final_exam.zip",
-#'               distort.shortname = TRUE)
-#' exams2mylearn(ex_files["single_choice"], 500, dir = ".", verbose = TRUE)
+#' if (interactive()) {
+#'   # Produce 40 exam questions in the currect directory
+#'   #   using the example that contains a plot; the
+#'   #   output is "final_exam.zip", and we want to
+#'   #   distort the shortname used by 'MyLearn'
+#'   exams2mylearn(ex_files["plot"], 40, dir = ".",
+#'                 outfile = "final_exam_question_1.zip",
+#'                 distort.shortname = TRUE)
+#' }
+#' 
+#' # Takes some time:
+#' \dontrun{
+#' # Produce 500 exam questions in the current
+#' #   directory using a different examplewith more
+#' #   verbose output from exams::exams2html
+#' exams2mylearn(ex_files["single_choice"], 500,
+#'               dir = ".", name = "final_exam_question_1",
+#'               verbose = TRUE)
 #' }
 #' @export
-exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
+exams2mylearn <- function (filename, n, dir, tdir = NULL,
+                           name = NULL, outfile = NULL,
                            dontask = !base::interactive(),
                            distort.shortname = FALSE, ...) {
+  filename_basename <- tools::file_path_sans_ext(base::basename(filename))
+  if ((base::missing(name) || base::is.null(name)) &&
+      (base::missing(outfile) || base::is.null(outfile))) {
+    base::stop("Either 'name' or 'outfile' has to be provided")
+  }
   if (base::missing(name) || base::is.null(name)) {
-    name <- stringr::str_to_lower(stringr::str_replace_all(filename, '[^[:alnum:]]', ''))
+    name <- stringr::str_to_lower(stringr::str_replace_all(filename_basename, '[^[:alnum:]]', ''))
   } else if (!base::is.character(name) || base::length(name) != 1L) {
     base::stop("Parameter 'name' has to a character string")
   }
-  tmpdir <- base::tempdir()
+  if (base::missing(tdir) || base::is.null(tdir)) {
+    tdir <- base::tempdir()
+  } else if (!base::dir.exists(tdir)) {
+    base::warning("Creating new directory", tdir)
+    base::dir.create(tdir, showWarnings = FALSE, recursive = TRUE)
+  }
+  if (!base::dir.exists(tdir)) {
+    base::stop("Unable to create", tdir)
+  } else {
+    tmpdir <- tools::file_path_as_absolute(tdir)
+  }
   if (!base::dir.exists(dir)) {
     base::warning("Creting new directory", dir)
     base::dir.create(dir, showWarnings = FALSE, recursive = TRUE)
@@ -66,8 +99,8 @@ exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
   }
   
   template.path <- base::c(
-    "multiplechoice" = system.file("extdata", "template-multiple.xml", package = "exams.wuvienna"),
-    "singleanswer" = system.file("extdata", "template-single.xml", package = "exams.wuvienna")
+    "multiplechoice" = system.file("extdata", "template-multiple.xml", package = "exams.mylearn"),
+    "singleanswer" = system.file("extdata", "template-single.xml", package = "exams.mylearn")
     )
   if (!base::file.exists(template.path["singleanswer"]) ||
       !base::file.exists(template.path["multiplechoice"])) {
@@ -99,7 +132,7 @@ exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
   for (sp_char in base::names(html_codes)) {
     content <- stringr::str_replace_all(content, sp_char, html_codes[sp_char])
   }
-  modified_filename <- base::tempfile(pattern = tools::file_path_sans_ext(base::basename(filename)),
+  modified_filename <- base::tempfile(pattern = filename_basename,
                                       tmpdir = tmpdir,
                                       fileext = stringr::str_c(".", tools::file_ext(filename)))
   base::writeLines(content, modified_filename, useBytes = TRUE)
@@ -112,7 +145,7 @@ exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
                             encoding = "UTF-8", ...)
   base::message("Step 1: Done")
   
-  base::message("Step 2: Converting from HTML to XML\r\n", appendLF=FALSE)
+  base::message("Step 2: Converting from HTML to XML\r\n", appendLF = FALSE)
   
   # Single or multiple choice?
   single_choice <- xexm[[1]][[1]]$metainfo$type == "schoice"
@@ -168,7 +201,9 @@ exams2mylearn <- function (filename, n, dir, name = NULL, outfile = NULL,
     feedback_node_html <- xml2::read_xml(stringr::str_c("<span>", stringr::str_c(exercise_exams$solution, collapse = "\n"), "</span>"))
     xml2::xml_add_child(feedback_node, feedback_node_html)
     
-    fileout <- base::file.path(tmpdir, glue::glue("{name}_v{num}.xml"))
+    fileout <- base::tempfile(pattern = glue::glue("{name}_v{num}"),
+                              tmpdir = tmpdir,
+                              fileext = ".xml")
     xml2::write_xml(output, fileout, encoding = "UTF-8")
     to_zip <- c(to_zip, fileout)
   }
