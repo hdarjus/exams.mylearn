@@ -1,6 +1,6 @@
 Package: exams.mylearn
 Title: Question Generation in the 'MyLearn' XML Format
-Version: 1.0
+Version: 1.1
 Authors@R: 
     person(given = "Darjus",
            family = "Hosszejni",

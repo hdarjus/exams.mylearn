@@ -20,8 +20,7 @@ MyLearn support team.
 # Installation
 
 ``` r
-install.packages("devtools")
-devtools::install_github("https://github.com/hdarjus/WU-MyLearn-QGen")
+install.packages("exams.mylearn")
 ```
 
 # Demo
