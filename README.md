@@ -20,7 +20,8 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/hdarjus/exams.mylearn/workflows/R-CMD-check/badge.svg)](https://github.com/hdarjus/exams.mylearn/actions)
+[![R CMD
+check](https://github.com/hdarjus/exams.mylearn/workflows/R-CMD-check/badge.svg)](https://github.com/hdarjus/exams.mylearn/actions)
 <!-- badges: end -->
 
 # Intro
