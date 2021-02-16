@@ -2,9 +2,6 @@
 .Rhistory
 .Rapp.history
 
-# R build files
-.Rbuildignore
-
 # Session Data files
 .RData
 
