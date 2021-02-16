@@ -1,12 +1,12 @@
 ---
 title: "Generate Questions for MyLearn"
 output:
-  rmarkdown::html_vignette:
-    toc: true
   md_document:
     variant: gfm
     toc: true
     toc_depth: 3
+  rmarkdown::html_vignette:
+    toc: true
   pdf_document:
     toc: true
     toc_depth: 3
@@ -29,6 +29,10 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/hdarjus/exams.mylearn/workflows/R-CMD-check/badge.svg)](https://github.com/hdarjus/exams.mylearn/actions)
+<!-- badges: end -->
 
 # Intro
 

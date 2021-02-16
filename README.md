@@ -18,6 +18,11 @@
 -   [Issues](#issues)
 -   [Maintainance](#maintainance)
 
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/hdarjus/exams.mylearn/workflows/R-CMD-check/badge.svg)](https://github.com/hdarjus/exams.mylearn/actions)
+<!-- badges: end -->
+
 # Intro
 
 Randomized multiple-select and single-select question generation for the
