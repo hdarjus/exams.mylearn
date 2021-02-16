@@ -42,6 +42,7 @@ Dependencies:
 * `libxml2`: found on popular Linux distros and in Rtools by default
 * `pandoc`: gets installed by `R` during installation
 * `R`: a recent version
+* on Windows: Rtools
 * popular `R` packages: installed automatically
 
 The question import functionality might have to be turned on by your MyLearn support team.

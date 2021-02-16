@@ -18,18 +18,18 @@ exams2mylearn(
 }
 \arguments{
 \item{filename}{(character) absolute or relative path to the exercise template.
-Usually simply a filename pointing at a .Rmd file in the working directory}
+Usually simply a file name pointing at a .Rmd file in the working directory}
 
 \item{n}{(integer) number of random variants to create}
 
 \item{dir}{(character) output directory, will be created if non-existent}
 
-\item{tdir}{(character, \emph{optional}) temporary directory; will use tempdir() if unspecified}
+\item{tdir}{(character, \emph{optional}) temporary directory; will use \code{tempdir()} if unspecified}
 
 \item{name}{(character, \emph{optional}) unique name prefix of temporary and output files,
-defaults to \code{filename} withour the non-alphabetic characters}
+defaults to \code{filename} without the non-alphabetic characters}
 
-\item{outfile}{(character, \emph{optional}) output filename (not a path), defaults to \code{name}.zip}
+\item{outfile}{(character, \emph{optional}) output file name (not a path), defaults to \code{name}.zip}
 
 \item{dontask}{(logical, \emph{optional}) if \code{TRUE} and the output zip file exists then}
 
@@ -70,7 +70,7 @@ if (interactive()) {
 # Takes some time:
 \dontrun{
 # Produce 500 exam questions in the current
-#   directory using a different examplewith more
+#   directory using a different example with more
 #   verbose output from exams::exams2html
 exams2mylearn(ex_files["single_choice"], 500,
               dir = ".", name = "final_exam_question_1",

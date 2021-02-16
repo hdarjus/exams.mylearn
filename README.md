@@ -1,3 +1,23 @@
+-   [Intro](#intro)
+-   [Installation](#installation)
+-   [Demo](#demo)
+-   [Recommended Workflow](#recommended-workflow)
+    -   [Writing the Question
+        Templates](#writing-the-question-templates)
+    -   [Generating the Exercises](#generating-the-exercises)
+        -   [Tip](#tip)
+        -   [Special Characters on
+            Windows](#special-characters-on-windows)
+    -   [Uploading to MyLearn](#uploading-to-mylearn)
+        -   [First Upload](#first-upload)
+        -   [Re-uploading with the Same
+            Shortname](#re-uploading-with-the-same-shortname)
+    -   [Importing Exercises](#importing-exercises)
+    -   [Organizing a Random Question on
+        MyLearn](#organizing-a-random-question-on-mylearn)
+-   [Issues](#issues)
+-   [Maintainance](#maintainance)
+
 # Intro
 
 Randomized multiple-select and single-select question generation for the
@@ -9,10 +29,11 @@ organized into exams in the Learning Activities.
 
 Dependencies:
 
-  - `libxml2`: found on popular Linux distros and in Rtools by default
-  - `pandoc`: gets installed by `R` during installation
-  - `R`: a recent version
-  - popular `R` packages: installed automatically
+-   `libxml2`: found on popular Linux distros and in Rtools by default
+-   `pandoc`: gets installed by `R` during installation
+-   `R`: a recent version
+-   on Windows: Rtools
+-   popular `R` packages: installed automatically
 
 The question import functionality might have to be turned on by your
 MyLearn support team.
@@ -104,9 +125,9 @@ feedback on where the generation process is.
 The .Rmd file is assumed to have UTF-8 encoding. That is important in
 case the .Rmd file contains special (e.g. German) characters.
 
-In RStudio, one can choose the encoding for file reading under *File* \>
-*Reopen with Encoding*, and for file writing under *File* \> *Save with
-Encoding*. It is recommended to do both with UTF-8.
+In RStudio, one can choose the encoding for file reading under *File*
+&gt; *Reopen with Encoding*, and for file writing under *File* &gt;
+*Save with Encoding*. It is recommended to do both with UTF-8.
 
 ## Uploading to MyLearn
 
@@ -131,25 +152,26 @@ versions.
 ## Importing Exercises
 
 Yes, uploading and importing are different steps. In the menu of the
-course’s *Learning activities*, click on *Import* \> *Import of existing
-learning materials*. A table of uploaded exercises appears.
+course’s *Learning activities*, click on *Import* &gt; *Import of
+existing learning materials*. A table of uploaded exercises appears.
 
 Use the filters to filter out your exercises. The most useful filters
 are *Already imported* set to *No* and the text input where you can use
 the unique shortnames.
 
-Select all exercises with one click, then *Selected items* \> *Import*.
-This brings you to the imported exercises. Select all and then *Selected
-items* \> *Add to clipboard*.
+Select all exercises with one click, then *Selected items* &gt;
+*Import*. This brings you to the imported exercises. Select all and then
+*Selected items* &gt; *Add to clipboard*.
 
 ## Organizing a Random Question on MyLearn
 
 Create a new *Poolfolder* in the *Learning activities* and open it.
-Click on *Clipboard* \> *Insert content here* and then *ok*. Release all
-questions in the poolfolder otherwise the random question won’t work.
+Click on *Clipboard* &gt; *Insert content here* and then *ok*. Release
+all questions in the poolfolder otherwise the random question won’t
+work.
 
 Now create a *Proxy* outside of the poolfolder and associate it with the
-poolfolder you created. This was the last step, congratulations\!
+poolfolder you created. This was the last step, congratulations!
 
 The poolfolder contains the pool of questions that the random question
 will choose from. It samples with replacement from the pool each time
@@ -158,7 +180,7 @@ hidden from students.
 
 At this point I recommend that you delete the exercises in the imported
 view. For that: in the menu of the course’s *Learning activities*, click
-on *Import* \> *Import of existing learning materials*. Delete all
+on *Import* &gt; *Import of existing learning materials*. Delete all
 exercises.
 
 # Issues

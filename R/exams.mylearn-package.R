@@ -1,10 +1,10 @@
 #' Question Generation in the 'MyLearn' XML Format
-#' 
+#'
 #' Randomized multiple-select and single-select
 #' question generation for the 'MyLearn' platform. Question templates
 #' in the form of the R/exams package
 #' are transformed into XML format required by 'MyLearn'.
-#' 
+#'
 #' @name exams.mylearn-package
 #' @aliases exams.mylearn
 #' @docType package
@@ -15,4 +15,5 @@
 #' @importFrom stringi stri_unescape_unicode
 #' @importFrom utils zip
 #' @importFrom tools file_path_as_absolute file_path_sans_ext file_ext
+#' @importFrom pkgbuild has_build_tools
 NULL

@@ -1,30 +1,30 @@
 #' Exam Generation for the 'MyLearn' Platform
-#' 
+#'
 #' The 'MyLearn' distance learning and teaching platform has a special XML format.
 #' \code{exams2mylearn} transforms
 #' input files in the R/exams format to XML files and zips them. The resulting
 #' zip file can be directly uploaded to the 'MyLearn' platform.
-#' 
+#'
 #' @param filename (character) absolute or relative path to the exercise template.
-#' Usually simply a filename pointing at a .Rmd file in the working directory
+#' Usually simply a file name pointing at a .Rmd file in the working directory
 #' @param n (integer) number of random variants to create
 #' @param dir (character) output directory, will be created if non-existent
-#' @param tdir (character, \emph{optional}) temporary directory; will use tempdir() if unspecified
+#' @param tdir (character, \emph{optional}) temporary directory; will use \code{tempdir()} if unspecified
 #' @param name (character, \emph{optional}) unique name prefix of temporary and output files,
-#' defaults to \code{filename} withour the non-alphabetic characters
-#' @param outfile (character, \emph{optional}) output filename (not a path), defaults to \code{name}.zip
+#' defaults to \code{filename} without the non-alphabetic characters
+#' @param outfile (character, \emph{optional}) output file name (not a path), defaults to \code{name}.zip
 #' @param dontask (logical, \emph{optional}) if \code{TRUE} and the output zip file exists then
 #' @param distort.shortname (logical, \emph{optional}) should the shortname include a random ending?
 #' Defaults to \code{FALSE}
 #' @param ... forwarded to \code{exams2html}
-#' @return 
+#' @return
 #' If \code{dir} is invalid or unspecified, the function returns with an error.
 #' Otherwise the function produces a zip file in directory \code{dir}.
 #' The exact path to the zip file is returned invisibly.
 #' @note The development team has to turn on the upload functionality on
 #' a per course basis.
 #' @examples
-#' 
+#'
 #' # Get the examples provided with the package
 #' ex_files <- example_paths()
 #' if (interactive()) {
@@ -36,11 +36,11 @@
 #'                 outfile = "final_exam_question_1.zip",
 #'                 distort.shortname = TRUE)
 #' }
-#' 
+#'
 #' # Takes some time:
 #' \dontrun{
 #' # Produce 500 exam questions in the current
-#' #   directory using a different examplewith more
+#' #   directory using a different example with more
 #' #   verbose output from exams::exams2html
 #' exams2mylearn(ex_files["single_choice"], 500,
 #'               dir = ".", name = "final_exam_question_1",
@@ -97,7 +97,7 @@ exams2mylearn <- function (filename, n, dir, tdir = NULL,
   } else {
     ""
   }
-  
+
   template.path <- base::c(
     "multiplechoice" = system.file("extdata", "template-multiple.xml", package = "exams.mylearn"),
     "singleanswer" = system.file("extdata", "template-single.xml", package = "exams.mylearn")
@@ -119,7 +119,12 @@ exams2mylearn <- function (filename, n, dir, tdir = NULL,
     base::message("Output directory ", outdir, " found")
   }
   base::message("Temporary directory is ", tmpdir)
-  
+
+  # Check for Rtools
+  if (!pkgbuild::has_build_tools()) {
+    stop("Please install or reinstall Rtools!")
+  }
+
   # Handle special characters. Without this trick pandoc ruins some inputs
   special_character_codes <- base::c("00c4", "00d6", "00dc", "00df", "00e4", "00f6", "00fc")
   special_characters <- stringi::stri_unescape_unicode(stringr::str_c("\\u", special_character_codes, sep = ""))
@@ -136,7 +141,7 @@ exams2mylearn <- function (filename, n, dir, tdir = NULL,
                                       tmpdir = tmpdir,
                                       fileext = stringr::str_c(".", tools::file_ext(filename)))
   base::writeLines(content, modified_filename, useBytes = TRUE)
-  
+
   # Generate exams both in R list and in .html
   base::message("Step 1: Generating exams in HTML format...")
   xexm <- exams::exams2html(modified_filename,
@@ -144,9 +149,9 @@ exams2mylearn <- function (filename, n, dir, tdir = NULL,
                             dir = tmpdir, converter = "pandoc-mathjax",
                             encoding = "UTF-8", ...)
   base::message("Step 1: Done")
-  
+
   base::message("Step 2: Converting from HTML to XML\r\n", appendLF = FALSE)
-  
+
   # Single or multiple choice?
   single_choice <- xexm[[1]][[1]]$metainfo$type == "schoice"
   multiple_choice <- xexm[[1]][[1]]$metainfo$type == "mchoice"
@@ -164,10 +169,10 @@ exams2mylearn <- function (filename, n, dir, tdir = NULL,
     exercise_exams$questionlist <- stringr::str_replace_all(exercise_exams$questionlist, placeholder, "&")
     exercise_exams$solution <- stringr::str_replace_all(exercise_exams$solution, placeholder, "&")
     exercise_exams$metainfo$name <- stringr::str_replace_all(exercise_exams$metainfo$name, placeholder, "&")
-    
+
     # Copy template
     output <- xml2::xml_new_root(xml2::xml_root(template))
-    
+
     # Add HTML nodes
     ## Replace title
     title_text <- exercise_exams$metainfo$name
@@ -200,7 +205,7 @@ exams2mylearn <- function (filename, n, dir, tdir = NULL,
     feedback_node <- xml2::xml_find_first(output, glue::glue("./exercise/question_data/{type}/feedback"))
     feedback_node_html <- xml2::read_xml(stringr::str_c("<span>", stringr::str_c(exercise_exams$solution, collapse = "\n"), "</span>"))
     xml2::xml_add_child(feedback_node, feedback_node_html)
-    
+
     fileout <- base::tempfile(pattern = glue::glue("{name}_v{num}"),
                               tmpdir = tmpdir,
                               fileext = ".xml")
@@ -208,10 +213,9 @@ exams2mylearn <- function (filename, n, dir, tdir = NULL,
     to_zip <- c(to_zip, fileout)
   }
   base::message("\nStep 2: Done")
-  
+
   base::message("Step 3: Writing ZIP file")
   utils::zip(outfile, to_zip, flags = "-Dj9X")
   base::message("Step 3: Done. Output is ", outfile)
   base::invisible(outfile)
 }
-

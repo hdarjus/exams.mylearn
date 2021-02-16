@@ -1,6 +1,6 @@
 Package: exams.mylearn
 Title: Question Generation in the 'MyLearn' XML Format
-Version: 1.1
+Version: 1.2
 Authors@R: 
     person(given = "Darjus",
            family = "Hosszejni",
@@ -20,13 +20,15 @@ Imports:
   glue (>= 1.4.0),
   stringr (>= 1.4.0),
   stringi (>= 1.4.6),
+  pkgbuild (>= 1.1.0),
   xml2 (>= 1.2.5)
 Suggests:
-  knitr
-URL: https://github.com/hdarjus/WU-MyLearn-QGen
-BugReports: https://github.com/hdarjus/WU-MyLearn-QGen/issues
+    knitr,
+    testthat
+URL: https://github.com/hdarjus/exams.mylearn
+BugReports: https://github.com/hdarjus/exams.mylearn/issues
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: 
   knitr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
