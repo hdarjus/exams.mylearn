@@ -1,6 +1,8 @@
 ---
 title: "Generate Questions for MyLearn"
 output:
+  rmarkdown::html_vignette:
+    toc: true
   md_document:
     variant: gfm
     toc: true
@@ -14,8 +16,6 @@ output:
     toc_depth: 3
     number_sections: true
     keep_md: true
-  rmarkdown::html_vignette:
-    toc: true
 vignette: >
   %\VignetteIndexEntry{Generate Questions for MyLearn}
   %\VignetteEncoding{UTF-8}

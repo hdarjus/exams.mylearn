@@ -1,6 +1,6 @@
 Package: exams.mylearn
 Title: Question Generation in the 'MyLearn' XML Format
-Version: 1.2
+Version: 1.3
 Authors@R: 
     person(given = "Darjus",
            family = "Hosszejni",
@@ -14,7 +14,7 @@ Description: Randomized multiple-select and single-select
   are transformed into XML format required by 'MyLearn'.
 License: GPL-3
 Depends:
-  R (>= 3.3.0)
+  R (>= 4.0.0)
 Imports:
   exams (>= 2.3-4),
   glue (>= 1.4.0),
@@ -24,7 +24,7 @@ Imports:
   xml2 (>= 1.2.5)
 Suggests:
     knitr,
-    testthat
+    rmarkdown
 URL: https://github.com/hdarjus/exams.mylearn
 BugReports: https://github.com/hdarjus/exams.mylearn/issues
 Encoding: UTF-8
