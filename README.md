@@ -197,4 +197,4 @@ exercises.
 # Maintainance
 
 Should you find bugs or request features, please use the [Issue tracker
-on Github](https://github.com/hdarjus/WU-MyLearn-QGen/issues).
+on Github](https://github.com/hdarjus/exams.mylearn/issues).
