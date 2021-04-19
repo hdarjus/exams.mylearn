@@ -67,7 +67,8 @@ if (interactive()) {
                 distort.shortname = TRUE)
 }
 
-For special characters, please check
+# For special characters, please check
+?special_characters
 
 # Takes some time:
 \dontrun{
