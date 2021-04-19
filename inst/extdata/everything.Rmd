@@ -5,6 +5,7 @@ boxdat <- scale(1:30)
 
 Question
 ========
+
 What is the derivative of $f(x) = x^{`r 1`} e^{`r 2` x}$, evaluated at $x = `r 4`$?
 A formula is $$x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}.$$
 
@@ -13,7 +14,7 @@ Here comes a table
 knitr::kable(tab)
 ```
 
-Here comes some R output:
+Here comes some `R` output:
 ```{r, results='markup', eval=TRUE, echo=FALSE}
 t.test(1:10)
 ```
@@ -31,6 +32,14 @@ Here's a boxplot
 ```{r, fig.cap="", fig.width=7, fig.asp=1, out.width='600px', echo=FALSE}
 boxplot(boxdat, main = "Beauty")
 ```
+
+A code block that is not evaluated:
+
+    variable <- rnorm(100)
+    var(variable)
+    mean(variable)
+
+Try out some extra characters: <q>Once</q> &amp; Andy&#39;s book.
 
 Answerlist
 ----------

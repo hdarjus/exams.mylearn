@@ -1,0 +1,27 @@
+Question
+========
+
+We write some special characters here:
+
+- Apostrophe: Andy&#39;s computer
+- Quotation mark: <q>This is a quotation.</q>
+- And this is an *and* sign: Tom&amp;Jerry
+
+Answerlist
+----------
+* Hey
+* Yo
+* Foo
+* Bar
+
+Solution
+========
+
+There is some feedback here.
+
+Meta-information
+================
+exname: First Question
+extype: mchoice
+exsolution: 0000
+exshuffle: TRUE
