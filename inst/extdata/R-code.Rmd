@@ -12,10 +12,20 @@ for (i in seq_along(dat)) {
 }
 ```
 
+Inline `R` code: <code>calc_rule(dat, k)</code>, and now a block of `R` code:
+
+    hist(dat, breaks = n)
+    var(dat)
+    myfun <- function (a) {
+      mean(a)
+    }
+Some invalid `R` code but still in typewriter font is <samp>data1</samp>.
+
 
 Answerlist
 ----------
-* <pre> a &lt;- 1:10 <br/>
+* Another, a bit more tedious way to show `R` code could be<br/>
+<pre> a &lt;- 1:10 <br/>
 print(a) </pre>
 
 * For some reason, code in the answerlist only works if it's already formatted as HTML
