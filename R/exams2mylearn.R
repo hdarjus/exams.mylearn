@@ -212,10 +212,19 @@ exams2mylearn <- function (filename, n, dir, tdir = NULL,
     xml2::write_xml(output, fileout, encoding = "UTF-8")
     to_zip <- c(to_zip, fileout)
   }
+  # Check whether the xml file creation has been successful
+  if (!base::file.exists(fileout)) {
+    stop("Could not create the xml file in the temporary folder. Please reinstall the 'xml2' package and restart your computer.")
+  }
+
   base::message("\nStep 2: Done")
 
   base::message("Step 3: Writing ZIP file")
   utils::zip(outfile, to_zip, flags = "-Dj9X")
+  # Check whether the zip file creation has been successful
+  if (!base::file.exists(outfile)) {
+    stop("Could not create the zip file. Please check your Rtools installation or reinstall R and Rtools, and restart your computer.")
+  }
   base::message("Step 3: Done. Output is ", outfile)
   base::invisible(outfile)
 }
